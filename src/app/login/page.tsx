@@ -59,8 +59,8 @@ export default function LoginPage() {
                         />
                     </Link>
                     <div className="text-center space-y-2">
-                        <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-[0.2em]">Welcome Back</h1>
-                        <p className="text-zinc-500 text-xs font-medium uppercase tracking-widest">Access your innovation hub</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-white">Welcome Back</h1>
+                        <p className="text-zinc-500 text-sm">Access your innovation hub</p>
                     </div>
                 </div>
 
@@ -68,7 +68,7 @@ export default function LoginPage() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-5">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Email Address</label>
+                                <label className="text-sm font-medium text-zinc-400 ml-1">Email Address</label>
                                 <div className="relative group">
                                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
                                     <Input
@@ -83,8 +83,8 @@ export default function LoginPage() {
 
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center ml-1">
-                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Password</label>
-                                    <a href="#" className="text-[10px] text-indigo-400 hover:text-indigo-300 font-bold uppercase tracking-widest">Forgot?</a>
+                                    <label className="text-sm font-medium text-zinc-400">Password</label>
+                                    <a href="#" className="text-xs text-indigo-400 hover:text-indigo-300 font-medium">Forgot?</a>
                                 </div>
                                 <div className="relative group">
                                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
@@ -100,7 +100,7 @@ export default function LoginPage() {
                         </div>
 
                         {error && (
-                            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 text-rose-400 text-[11px] font-bold text-center uppercase tracking-wider">
+                            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 text-rose-400 text-sm font-medium text-center">
                                 {error}
                             </div>
                         )}
@@ -109,15 +109,15 @@ export default function LoginPage() {
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full h-12 bg-white text-black hover:bg-zinc-200 rounded-xl font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-lg shadow-white/5 disabled:opacity-50"
+                                className="w-full h-12 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold text-sm transition-all shadow-lg shadow-white/5 disabled:opacity-50"
                             >
                                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
                             </Button>
 
                             <div className="text-center">
-                                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+                                <p className="text-sm text-zinc-500">
                                     New to DevHack?{" "}
-                                    <Link href="/register" className="text-white hover:text-indigo-400 transition-colors">Create Account</Link>
+                                    <Link href="/register" className="text-white hover:text-indigo-400 font-medium transition-colors">Create Account</Link>
                                 </p>
                             </div>
                         </div>
@@ -125,7 +125,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Footer Subtle Text */}
-                <p className="text-center text-[9px] text-zinc-800 font-bold uppercase tracking-[0.3em]">
+                <p className="text-center text-[10px] text-zinc-700 font-medium">
                     Secure Authentication Powered by DevHack
                 </p>
             </div>
