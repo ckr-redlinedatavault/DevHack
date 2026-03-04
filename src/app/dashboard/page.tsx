@@ -52,6 +52,15 @@ export default function DashboardPage() {
         fetchTeams();
     }, []);
 
+    const handleLogout = async () => {
+        try {
+            await fetch("/api/logout", { method: "POST" });
+            window.location.href = "/login";
+        } catch (err) {
+            console.error("Logout failed");
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center text-white">
@@ -92,7 +101,7 @@ export default function DashboardPage() {
 
                 <div className="mt-auto p-6 border-t border-white/5">
                     <button
-                        onClick={() => window.location.href = '/login'}
+                        onClick={handleLogout}
                         className="w-full h-11 bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 group"
                     >
                         <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
