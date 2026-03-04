@@ -21,10 +21,10 @@ export default function LandingPage() {
           <Image
             src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
             alt="DevHack Logo"
-            width={160}
-            height={40}
+            width={240}
+            height={60}
             priority
-            className="h-8 md:h-10 w-auto object-contain brightness-125"
+            className="h-12 md:h-16 w-auto object-contain brightness-125"
           />
         </div>
 
