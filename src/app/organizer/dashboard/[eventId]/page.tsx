@@ -2,9 +2,12 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Mail, Users, CheckCircle2, Copy, ArrowRight, Clock } from "lucide-react";
+import { ArrowLeft, Mail, Users, CheckCircle2, Copy, ArrowRight, Clock, Settings } from "lucide-react";
 import InviteActions from "./InviteActions";
 import TimelineManager from "./TimelineManager";
+import EventControlCenter from "./EventControlCenter";
+import JudgeManager from "./JudgeManager";
+import { UserPlus, QrCode } from "lucide-react";
 
 export default async function EventDashboard({ params }: { params: Promise<{ eventId: string }> }) {
     const { eventId } = await params;
@@ -19,7 +22,8 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
         where: { id: eventId, organizerId },
         include: {
             registrations: true,
-            timelines: { orderBy: { time: 'asc' } }
+            timelines: { orderBy: { time: 'asc' } },
+            judges: true
         },
     });
 
@@ -80,6 +84,15 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
                         </div>
                     </div>
                 </div>
+
+                <EventControlCenter
+                    eventId={event.id}
+                    initialStatus={event.status}
+                    initialPhase={event.currentPhase}
+                    initialReveal={event.isRevealing}
+                />
+
+                <JudgeManager eventId={event.id} existingJudges={event.judges} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-white/5">
                     {/* Pending Leads */}

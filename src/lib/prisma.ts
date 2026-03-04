@@ -1,4 +1,4 @@
-// Force Next.js to re-evaluate the generated Prisma client for newest Timeline schema update - Cache Bust 2
+// Force Next.js to re-evaluate the generated Prisma client for newest Judge/Score schema update - Cache Bust 3
 import { PrismaClient } from "../generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";

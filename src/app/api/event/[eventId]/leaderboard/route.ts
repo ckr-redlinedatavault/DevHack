@@ -9,7 +9,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
             where: { id: eventId },
             include: {
                 registrations: {
-                    where: { status: "INVITED" } // Only show teams that are actually participating
+                    where: { status: "INVITED" }
                 }
             }
         });
@@ -52,28 +52,36 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
             return {
                 id: reg.id,
                 teamName: reg.teamName,
-                score,
+                dynamicScore: score, // Tasks-based score
+                judgeScore: reg.totalScore, // Judge-based average
                 tasksCompleted,
                 hasSubmission,
                 joinedAt: reg.createdAt,
             };
         });
 
-        // Sort descending by score. If tied, sort by earliest joined
+        // Current scoring logic (Task completion is default unless judging is live)
+        const isJudgingLive = event.status === "JUDGING" || event.status === "ENDED";
+
         leaderboard.sort((a, b) => {
-            if (b.score !== a.score) {
-                return b.score - a.score;
+            if (isJudgingLive) {
+                if (b.judgeScore !== a.judgeScore) return b.judgeScore - a.judgeScore;
             }
+            if (b.dynamicScore !== a.dynamicScore) return b.dynamicScore - a.dynamicScore;
             return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime();
         });
 
-        // Map the sorted array to apply the rank
         const rankedLeaderboard = leaderboard.map((team, index) => ({
             ...team,
             rank: index + 1
         }));
 
-        return NextResponse.json({ leaderboard: rankedLeaderboard }, { status: 200 });
+        return NextResponse.json({
+            leaderboard: rankedLeaderboard,
+            status: event.status,
+            isRevealing: event.isRevealing,
+            currentPhase: event.currentPhase
+        }, { status: 200 });
     } catch (error) {
         console.error("Leaderboard fetch error:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

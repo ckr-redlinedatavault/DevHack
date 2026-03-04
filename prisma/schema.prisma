@@ -161,9 +161,30 @@ model HackathonEvent {
   description   String
   startDate     DateTime?
   endDate       DateTime?
+  status        EventStatus         @default(UPCOMING)
+  currentPhase  String              @default("Hacking")
+  isRevealing   Boolean             @default(false) // For Ceremony Reveal Mode
   createdAt     DateTime            @default(now())
   registrations EventRegistration[]
   timelines     TimelineEvent[]
+  judges        Judge[]
+}
+
+enum EventStatus {
+  UPCOMING
+  LIVE
+  JUDGING
+  ENDED
+}
+
+model Judge {
+  id        String         @id @default(cuid())
+  eventId   String
+  event     HackathonEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  email     String
+  password  String
+  name      String
+  scores    Score[]
 }
 
 model EventRegistration {
@@ -173,7 +194,25 @@ model EventRegistration {
   teamName  String
   leadEmail String
   status    RegistrationStatus @default(PENDING)
+  totalScore Float             @default(0)
   createdAt DateTime           @default(now())
+  scores    Score[]
+}
+
+model Score {
+  id             String            @id @default(cuid())
+  registrationId String
+  registration   EventRegistration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  judgeId        String
+  judge          Judge             @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  innovation     Int               @default(0)
+  implementation Int               @default(0)
+  design         Int               @default(0)
+  impact         Int               @default(0)
+  comment        String?
+  createdAt      DateTime          @default(now())
+
+  @@unique([registrationId, judgeId])
 }
 
 enum RegistrationStatus {
