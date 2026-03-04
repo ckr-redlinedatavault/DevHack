@@ -28,8 +28,8 @@ import {
     Clock,
     Rocket,
     Loader2,
-    ArrowRight
-
+    ArrowRight,
+    Save
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -561,39 +561,27 @@ function ResourcesModule({ teamId, initialResources }: { teamId: string, initial
 
 function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: any[] }) {
     const [notes, setNotes] = useState(initialNotes);
-    const [activeNoteId, setActiveNoteId] = useState<string | null>(initialNotes?.[0]?.id || null);
-    const [isCreating, setIsCreating] = useState(false);
+    const [draftTitle, setDraftTitle] = useState("");
+    const [draftContent, setDraftContent] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
 
-    const activeNote = notes.find(n => n.id === activeNoteId);
-
-    const createNote = async () => {
-        setIsCreating(true);
+    const handleSave = async () => {
+        if (!draftTitle.trim() && !draftContent.trim()) return;
+        setIsSaving(true);
         try {
             const res = await fetch(`/api/workspace/${teamId}/notes`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title: "New Note", content: "Start typing here..." })
+                body: JSON.stringify({ title: draftTitle || "Untitled Note", content: draftContent })
             });
             if (res.ok) {
                 const newNote = await res.json();
                 setNotes([newNote, ...notes]);
-                setActiveNoteId(newNote.id);
+                setDraftTitle("");
+                setDraftContent("");
             }
         } finally {
-            setIsCreating(false);
-        }
-    };
-
-    const updateNote = async (id: string, updates: { title?: string, content?: string }) => {
-        setNotes(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
-        try {
-            await fetch(`/api/workspace/${teamId}/notes`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, ...updates })
-            });
-        } catch (err) {
-            console.error(err);
+            setIsSaving(false);
         }
     };
 
@@ -605,11 +593,7 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
                 body: JSON.stringify({ id })
             });
             if (res.ok) {
-                const remaining = notes.filter(n => n.id !== id);
-                setNotes(remaining);
-                if (activeNoteId === id) {
-                    setActiveNoteId(remaining[0]?.id || null);
-                }
+                setNotes(prev => prev.filter(n => n.id !== id));
             }
         } catch (err) {
             console.error(err);
@@ -617,72 +601,67 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-12rem)] animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex justify-between items-center mb-6 shrink-0">
-                <div>
-                    <h2 className="text-2xl font-bold">Project Notes</h2>
-                    <p className="text-zinc-500 text-sm mt-1">Brainstorming, architecture, and meeting logs.</p>
-                </div>
-                <Button onClick={createNote} disabled={isCreating} className="bg-white text-black hover:bg-zinc-200 rounded-lg h-10 px-6 font-medium transition-all shadow-none flex items-center gap-2">
-                    {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} New Note
-                </Button>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
+            <div>
+                <h2 className="text-2xl font-bold">Project Notes</h2>
+                <p className="text-zinc-500 text-sm mt-1">Jot down architecture decisions, meeting logs, or quick ideas.</p>
             </div>
 
-            <div className="flex flex-1 gap-6 overflow-hidden">
-                {/* Sidebar Menu */}
-                <div className="w-64 shrink-0 flex flex-col gap-2 overflow-y-auto pr-2 custom-scrollbar">
-                    {notes?.map((note) => {
-                        const isActive = activeNoteId === note.id;
-                        return (
-                            <button
-                                key={note.id}
-                                onClick={() => setActiveNoteId(note.id)}
-                                className={`w-full text-left px-4 py-3 rounded-xl transition-all border ${isActive ? 'bg-[#18181b] border-[#3f3f46] shadow-sm' : 'bg-transparent border-transparent hover:bg-[#121214] hover:border-[#27272a]'}`}
-                            >
-                                <p className={`text-sm font-semibold truncate ${isActive ? 'text-white' : 'text-zinc-400'}`}>{note.title}</p>
-                                <p className="text-[10px] uppercase tracking-wider text-zinc-600 mt-1 font-mono">Updated</p>
-                            </button>
-                        );
-                    })}
-                    {(!notes || notes.length === 0) && (
-                        <div className="flex flex-col items-center justify-center p-6 text-center border border-dashed border-[#27272a] rounded-xl mt-4">
-                            <p className="text-zinc-500 text-xs font-semibold uppercase tracking-widest">Empty</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Editor Area */}
-                <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-2xl overflow-hidden flex flex-col">
-                    {activeNote ? (
-                        <div className="flex flex-col h-full">
-                            <div className="flex justify-between items-center border-b border-[#27272a] px-8 py-6 group bg-[#18181b]/50">
-                                <input
-                                    value={activeNote.title}
-                                    onChange={(e) => updateNote(activeNote.id, { title: e.target.value })}
-                                    className="text-2xl font-bold bg-transparent border-none focus:ring-0 focus:outline-none w-full text-zinc-100 placeholder:text-zinc-700"
-                                    placeholder="Note Title"
-                                />
-                                <button onClick={() => deleteNote(activeNote.id)} className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-rose-500/10 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100 shrink-0">
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
-                            </div>
-                            <textarea
-                                value={activeNote.content}
-                                onChange={(e) => updateNote(activeNote.id, { content: e.target.value })}
-                                className="w-full flex-1 bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-zinc-300 leading-relaxed text-sm p-8 custom-scrollbar"
-                                placeholder="Start writing your brilliant ideas here..."
-                            />
-                        </div>
-                    ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center text-zinc-500">
-                            <div className="w-16 h-16 rounded-2xl bg-[#18181b] border border-[#27272a] shadow-inner flex items-center justify-center mb-4">
-                                <span className="text-zinc-700 text-2xl font-bold">~</span>
-                            </div>
-                            <p className="text-sm font-medium">Select a note or create a new one.</p>
-                        </div>
-                    )}
+            {/* Quick Note Editor */}
+            <div className="bg-[#121214] border border-[#27272a] focus-within:border-[#3f3f46] transition-colors rounded-2xl overflow-hidden flex flex-col shadow-sm">
+                <input
+                    value={draftTitle}
+                    onChange={(e) => setDraftTitle(e.target.value)}
+                    className="text-lg font-bold bg-transparent border-none focus:ring-0 focus:outline-none w-full text-zinc-100 placeholder:text-zinc-600 px-6 py-5"
+                    placeholder="Note Title"
+                />
+                <textarea
+                    value={draftContent}
+                    onChange={(e) => setDraftContent(e.target.value)}
+                    className="w-full bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-zinc-300 leading-relaxed text-sm px-6 pb-4 min-h-[140px] custom-scrollbar"
+                    placeholder="Start writing your thoughts here..."
+                />
+                <div className="flex justify-between items-center px-6 py-4 border-t border-[#27272a] bg-[#18181b]/30 backdrop-blur-sm">
+                    <p className="text-xs text-zinc-600 font-mono hidden sm:block">Markdown is not supported yet.</p>
+                    <Button
+                        onClick={handleSave}
+                        disabled={isSaving || (!draftTitle && !draftContent)}
+                        className="bg-white text-black hover:bg-zinc-200 rounded-lg h-9 px-6 font-medium transition-all shadow-none flex items-center gap-2 ml-auto"
+                    >
+                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Note
+                    </Button>
                 </div>
             </div>
+
+            {/* Notes Grid Display */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {notes?.map((note) => (
+                    <div key={note.id} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] rounded-xl flex flex-col group transition-all relative">
+                        <div className="p-6 flex-1 flex flex-col">
+                            <h3 className="font-bold text-zinc-100 mb-3 truncate pr-8">{note.title}</h3>
+                            <p className="text-zinc-400 text-sm whitespace-pre-wrap line-clamp-6 leading-relaxed flex-1">
+                                {note.content}
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => deleteNote(note.id)}
+                            className="absolute top-5 right-5 w-8 h-8 rounded-lg bg-[#27272a] border border-[#3f3f46] flex items-center justify-center text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/20 opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                    </div>
+                ))}
+            </div>
+
+            {(!notes || notes.length === 0) && (
+                <div className="py-20 flex flex-col items-center justify-center border border-dashed border-[#27272a] bg-[#121214] rounded-2xl">
+                    <div className="w-12 h-12 bg-[#18181b] border border-[#27272a] rounded-xl flex items-center justify-center mb-4">
+                        <FileText className="w-5 h-5 text-zinc-600" />
+                    </div>
+                    <p className="text-zinc-400 font-medium text-sm">No notes saved yet.</p>
+                    <p className="text-zinc-600 text-xs mt-1">Write your first note in the editor above.</p>
+                </div>
+            )}
         </div>
     );
 }
