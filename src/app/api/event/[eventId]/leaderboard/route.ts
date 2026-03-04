@@ -9,7 +9,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
             where: { id: eventId },
             include: {
                 registrations: {
-                    where: { status: "INVITED" }
+                    where: { status: "INVITED" } // Only show approved leads on scoreboard
                 }
             }
         });
@@ -18,49 +18,56 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
             return NextResponse.json({ message: "Event not found" }, { status: 404 });
         }
 
-        const teamNames = event.registrations.map(r => r.teamName);
+        const leaderboard = await Promise.all(event.registrations.map(async (reg) => {
+            // Find the actual workspace team linked to this lead's email
+            // We search for a team where the registered lead is a direct member
+            const actualTeam = await prisma.team.findFirst({
+                where: {
+                    members: {
+                        some: {
+                            user: {
+                                email: reg.leadEmail
+                            }
+                        }
+                    }
+                },
+                include: {
+                    tasks: true,
+                    submission: true
+                }
+            });
 
-        // Fetch corresponding actual workspace teams to calculate their live progress scores
-        const actualTeams = await prisma.team.findMany({
-            where: { name: { in: teamNames } },
-            include: {
-                tasks: true,
-                submission: true,
-                members: true
-            }
-        });
-
-        const leaderboard = event.registrations.map(reg => {
-            const actualTeam = actualTeams.find(t => t.name === reg.teamName);
-            let score = 0;
+            let dynamicScore = 0;
             let tasksCompleted = 0;
             let hasSubmission = false;
 
             if (actualTeam) {
-                // Assign 10 points for every completed task
+                // 10 points per DONE task
                 const doneTasks = actualTeam.tasks.filter(t => t.status === "DONE").length;
                 tasksCompleted = doneTasks;
-                score += doneTasks * 10;
+                dynamicScore += doneTasks * 10;
 
-                // Assign 50 points if they have submitted their project
+                // 100 points for project submission (higher reward for completion)
                 if (actualTeam.submission) {
                     hasSubmission = true;
-                    score += 50;
+                    dynamicScore += 100;
                 }
             }
 
             return {
                 id: reg.id,
-                teamName: reg.teamName,
-                dynamicScore: score, // Tasks-based score
-                judgeScore: reg.totalScore, // Judge-based average
+                teamName: reg.teamName, // Display the registration name, but scores come from linked workspace
+                dynamicScore,
+                judgeScore: reg.totalScore, // Average from judges
                 tasksCompleted,
                 hasSubmission,
                 joinedAt: reg.createdAt,
             };
-        });
+        }));
 
-        // Current scoring logic (Task completion is default unless judging is live)
+        // Scoring hierarchy: 
+        // 1. If judging is LIVE/ENDED, judgeScore (avg) takes priority
+        // 2. Otherwise, dynamicScore (tasks + submission) takes priority
         const isJudgingLive = event.status === "JUDGING" || event.status === "ENDED";
 
         leaderboard.sort((a, b) => {
@@ -82,8 +89,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
             isRevealing: event.isRevealing,
             currentPhase: event.currentPhase
         }, { status: 200 });
+
     } catch (error) {
-        console.error("Leaderboard fetch error:", error);
+        console.error("Leaderboard analytics error:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }

@@ -29,6 +29,10 @@ export default function RegistrationForm({ eventId }: { eventId: string }) {
 
             if (res.ok) {
                 setStatus("success");
+                // Navigate to onboarding directly as per updated flow
+                setTimeout(() => {
+                    window.location.href = data.redirectTo || "/onboarding";
+                }, 2000);
             } else {
                 setStatus("error");
                 setMessage(data.message || "Registration failed");
@@ -43,16 +47,13 @@ export default function RegistrationForm({ eventId }: { eventId: string }) {
 
     if (status === "success") {
         return (
-            <div className="bg-[#121214] border border-emerald-500/20 rounded-[2rem] p-12 text-center space-y-6 shadow-2xl shadow-emerald-500/10">
-                <div className="w-20 h-20 bg-emerald-500/10 rounded-full mx-auto flex items-center justify-center">
-                    <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            <div className="bg-[#121214] border border-rose-500/20 rounded-[2rem] p-12 text-center space-y-6 shadow-2xl shadow-rose-500/10">
+                <div className="w-20 h-20 bg-rose-500/10 rounded-full mx-auto flex items-center justify-center">
+                    <Loader2 className="w-10 h-10 text-rose-500 animate-spin" />
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Registration Request Sent!</h2>
-                    <p className="text-zinc-500 mt-2 font-medium">Your team lead email has been recorded.</p>
-                </div>
-                <div className="p-4 bg-black border border-white/5 rounded-2xl text-sm text-zinc-400">
-                    The hackathon organizer will review your request. If approved, you will receive an official invitation via email with access to the live event timer portal.
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Mission Initialized!</h2>
+                    <p className="text-zinc-500 mt-2 font-medium">Redirecting to your mission control workspace...</p>
                 </div>
             </div>
         );

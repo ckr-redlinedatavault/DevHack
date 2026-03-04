@@ -37,48 +37,48 @@ export default function TimelineManager({ eventId, existingTimelines }: { eventI
     };
 
     return (
-        <div className="bg-[#121214] border border-white/5 rounded-3xl p-8 space-y-6">
-            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
-                <Clock className="w-6 h-6 text-indigo-400" />
-                <h2 className="text-xl font-bold text-white">Event Timeline Manager</h2>
+        <div className="bg-zinc-950 border border-white/5 rounded-3xl p-8 space-y-10">
+            <div className="flex items-center gap-3 border-b border-white/5 pb-6">
+                <Clock className="w-5 h-5 text-zinc-500" />
+                <h2 className="text-sm font-bold text-white tracking-tight">Timeline Chronicle</h2>
             </div>
 
-            <form onSubmit={handleAdd} className="flex flex-col md:flex-row gap-4">
+            <form onSubmit={handleAdd} className="flex flex-col md:flex-row gap-3">
                 <input
                     type="text"
                     placeholder="E.g., Opening Ceremony"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="flex-1 bg-black border border-white/5 focus:border-indigo-500/50 text-white rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600 font-medium"
+                    className="flex-1 bg-black border border-white/5 focus:border-rose-500/20 text-white rounded-xl px-5 py-3 text-sm outline-none transition-all placeholder:text-zinc-700 font-semibold"
                 />
                 <input
                     type="datetime-local"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
                     required
-                    className="flex-1 bg-black border border-white/5 focus:border-indigo-500/50 text-white rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600 font-medium md:max-w-xs"
+                    className="flex-1 bg-black border border-white/5 focus:border-rose-500/20 text-white rounded-xl px-5 py-3 text-sm outline-none transition-all md:max-w-xs font-semibold"
                 />
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-white text-black hover:bg-zinc-200 px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group disabled:opacity-50 whitespace-nowrap"
+                    className="bg-rose-500 text-white hover:bg-rose-400 px-8 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 group disabled:opacity-50 whitespace-nowrap shadow-lg shadow-rose-500/10"
                 >
-                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Plus className="w-5 h-5 group-hover:rotate-90 transition-transform" /> Add Point</>}
+                    {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Add Entry
                 </button>
             </form>
 
-            <div className="space-y-4 pt-4">
+            <div className="space-y-3 pt-6">
                 {existingTimelines.length === 0 ? (
-                    <div className="text-center py-8 text-zinc-500 font-medium bg-black/50 rounded-2xl border border-white/5">
-                        No timeline events added yet.
+                    <div className="text-center py-20 text-zinc-700 font-bold text-xs bg-black/50 rounded-2xl border border-white/5 opacity-40">
+                        Registry empty
                     </div>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         {existingTimelines.map((timeline) => (
-                            <div key={timeline.id} className="flex items-center justify-between p-4 bg-black border border-white/5 rounded-2xl">
-                                <div className="font-medium text-white">{timeline.title}</div>
-                                <div className="text-sm font-bold text-indigo-400 tracking-wider">
+                            <div key={timeline.id} className="flex items-center justify-between p-5 bg-zinc-900/40 border border-white/5 rounded-2xl hover:border-white/10 transition-colors">
+                                <div className="font-bold text-zinc-200 text-base tracking-tight leading-none">{timeline.title}</div>
+                                <div className="bg-black/60 px-4 py-2 rounded-xl border border-white/5 text-xs text-zinc-500 font-bold tracking-tight">
                                     {new Date(timeline.time).toLocaleString(undefined, {
                                         month: "short", day: "numeric", hour: "numeric", minute: "2-digit"
                                     })}

@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, ArrowLeft, Rocket, Users, Trophy, ClipboardList, Send, ArrowRight } from "lucide-react";
+import { Loader2, ArrowLeft, Rocket, Users, Trophy, ClipboardList, Send, ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function CreateTeamPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -48,150 +47,117 @@ export default function CreateTeamPage() {
 
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white p-6 md:p-12 selection:bg-indigo-500/30 relative overflow-hidden">
+        <div className="min-h-screen bg-black text-white p-6 md:p-12 selection:bg-rose-500/30 relative overflow-hidden">
             {/* Logo at top left */}
-            <div className="absolute top-8 left-8 z-50">
-                <Link href="/" className="transition-transform hover:scale-105 duration-300">
-                    <img
-                        src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
-                        alt="DevHack Logo"
-                        className="h-16 w-auto object-contain"
-                    />
+            <div className="absolute top-10 left-10 z-50">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="w-10 h-10 bg-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20 group-hover:scale-105 transition-all">
+                        <Zap className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-white font-bold text-xl tracking-tighter">DevHack</span>
                 </Link>
             </div>
-            <div className="max-w-4xl mx-auto space-y-8 relative">
-                <nav className="flex items-center space-x-2 text-sm font-medium text-zinc-500 mb-8">
-                    <Link href="/dashboard" className="hover:text-white transition-colors">
-                        Dashboard
+
+            <div className="max-w-4xl mx-auto space-y-12 relative">
+                <nav className="flex items-center space-x-3 text-xs font-bold text-zinc-600 mb-10 pt-10">
+                    <Link href="/onboarding" className="hover:text-rose-500 transition-colors flex items-center gap-1">
+                        <ArrowLeft className="w-3.5 h-3.5" /> Back to Choice
                     </Link>
-                    <span className="text-zinc-700">/</span>
-                    <Link href="/onboarding" className="hover:text-white transition-colors">
-                        Onboarding
-                    </Link>
-                    <span className="text-zinc-700">/</span>
-                    <span className="text-indigo-400">Create Team</span>
+                    <span className="text-zinc-800">/</span>
+                    <span className="text-rose-500">Workspace Build</span>
                 </nav>
 
                 <div className="space-y-4">
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight font-outfit">Set up your workspace.</h1>
-                    <p className="text-zinc-500 text-lg font-medium">Define the mission and rally your team members.</p>
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">Start your build.</h1>
+                    <p className="text-zinc-500 text-lg font-medium leading-relaxed max-w-xl italic">Ready to transform your mission registration into a production-ready workspace.</p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8 relative z-10">
                     <div className="lg:col-span-2">
-                        <div className="bg-[#121214] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl shadow-black/50">
+                        <div className="bg-zinc-950/40 border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl backdrop-blur-sm">
                             <form onSubmit={handleSubmit} className="flex flex-col">
-                                <div className="p-8 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
-                                    <h2 className="text-xl text-white font-bold tracking-tight">Project details</h2>
-                                    <p className="text-zinc-500 text-sm font-medium mt-1">Provide the foundational information for your team.</p>
+                                <div className="p-10 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
+                                    <h2 className="text-xl text-white font-bold tracking-tight">Project Identity</h2>
+                                    <p className="text-zinc-500 text-sm font-medium mt-1 opacity-70">Define the core metadata for your hackathon journey.</p>
                                 </div>
-                                <div className="p-8 space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="p-10 space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-3">
-                                            <label className="text-sm font-medium text-zinc-400 ml-1 flex items-center gap-2">
-                                                <Users className="w-4 h-4 text-indigo-400" /> Team name
+                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
+                                                <Users className="w-4 h-4 text-rose-500" /> Team name
                                             </label>
                                             <Input
                                                 name="teamName"
-                                                placeholder="Team Alpha"
+                                                placeholder="Quantum Hack"
                                                 required
-                                                className="bg-black border-white/5 h-12 focus:border-indigo-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium"
+                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
                                             />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-sm font-medium text-zinc-400 ml-1 flex items-center gap-2">
-                                                <Rocket className="w-4 h-4 text-emerald-400" /> Project name
-                                            </label>
-                                            <Input
-                                                name="projectName"
-                                                placeholder="Smart Waste Guard"
-                                                required
-                                                className="bg-black border-white/5 h-12 focus:border-indigo-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="space-y-3">
-                                            <label className="text-sm font-medium text-zinc-400 ml-1 flex items-center gap-2">
-                                                <Trophy className="w-4 h-4 text-amber-400" /> Hackathon name
+                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
+                                                <Rocket className="w-4 h-4 text-white opacity-40" /> Hackathon target
                                             </label>
                                             <Input
                                                 name="hackathonName"
-                                                placeholder="Global AI Summit 2026"
+                                                placeholder="Summit Event 2026"
                                                 required
-                                                className="bg-black border-white/5 h-12 focus:border-indigo-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium"
-                                            />
-                                        </div>
-                                        <div className="space-y-3">
-                                            <label className="text-sm font-medium text-zinc-400 ml-1 flex items-center gap-2">
-                                                <Users className="w-4 h-4 text-rose-400" /> Team size
-                                            </label>
-                                            <Input
-                                                name="teamSize"
-                                                type="number"
-                                                max={10}
-                                                defaultValue={4}
-                                                className="bg-black border-white/5 h-12 focus:border-indigo-500/50 text-white rounded-xl transition-all font-medium"
+                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="space-y-3">
-                                        <label className="text-sm font-medium text-zinc-400 ml-1 flex items-center gap-2">
-                                            <ClipboardList className="w-4 h-4 text-sky-400" /> Project description
+                                        <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
+                                            <ClipboardList className="w-4 h-4 text-rose-500" /> Executive summary
                                         </label>
                                         <Textarea
                                             name="description"
-                                            placeholder="Briefly describe what you are building during the hackathon..."
-                                            className="bg-black border-white/5 min-h-[140px] focus:border-indigo-500/50 text-white rounded-2xl p-4 placeholder:text-zinc-800 transition-all font-medium resize-y"
+                                            placeholder="What are we solving today?"
+                                            className="bg-black border-white/5 min-h-[140px] focus:border-rose-500/50 text-white rounded-3xl p-5 placeholder:text-zinc-800 transition-all font-medium text-sm leading-relaxed resize-y"
                                         />
                                     </div>
                                 </div>
-                                <div className="p-6 bg-black/20 border-t border-white/5 flex justify-end gap-4 mt-auto">
+                                <div className="p-8 bg-black/40 border-t border-white/5 flex justify-end gap-4 mt-auto">
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="bg-white text-black hover:bg-zinc-200 px-8 h-12 rounded-xl font-bold shadow-lg shadow-white/5 transition-all flex items-center gap-2 disabled:opacity-50"
+                                        className="bg-white text-black hover:bg-rose-500 hover:text-white px-10 h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 disabled:opacity-50 shadow-xl"
                                     >
-                                        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-4 h-4" /> Finalize & Create</>}
+                                        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-4 h-4" /> Initialize Workspace</>}
                                     </Button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="p-8 rounded-[2rem] bg-[#121214] border border-white/5 space-y-5 shadow-xl shadow-black/20 relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-indigo-500/0 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <h3 className="text-lg font-bold text-white tracking-tight relative z-10 flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
-                                    <Users className="w-4 h-4 text-indigo-400" />
+                    <div className="space-y-8">
+                        <div className="p-10 rounded-[2.5rem] bg-zinc-950/40 border border-white/5 space-y-6 shadow-xl relative overflow-hidden group backdrop-blur-sm">
+                            <div className="absolute inset-0 bg-gradient-to-br from-rose-500/0 via-rose-500/0 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <h3 className="text-lg font-bold text-white tracking-tight relative z-10 flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center">
+                                    <Users className="w-5 h-5 text-rose-500" />
                                 </div>
-                                Team leader kit
+                                Setup kit
                             </h3>
-                            <ul className="space-y-4 text-zinc-500 text-sm font-medium relative z-10">
-                                <li className="flex items-start gap-3">
-                                    <div className="w-5 h-5 rounded-md bg-[#18181b] border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold text-zinc-400">1</div>
-                                    <span>Invite link will be generated instantly for copying.</span>
+                            <ul className="space-y-5 text-zinc-500 text-sm font-medium relative z-10">
+                                <li className="flex items-start gap-4">
+                                    <div className="w-6 h-6 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-zinc-600">01</div>
+                                    <span className="leading-relaxed">Team lead permission initialized internally.</span>
                                 </li>
-                                <li className="flex items-start gap-3">
-                                    <div className="w-5 h-5 rounded-md bg-[#18181b] border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold text-zinc-400">2</div>
-                                    <span>You will be assigned as the primary Team Lead.</span>
+                                <li className="flex items-start gap-4">
+                                    <div className="w-6 h-6 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-zinc-600">02</div>
+                                    <span className="leading-relaxed">Automated invite link generated upon save.</span>
                                 </li>
-                                <li className="flex items-start gap-3">
-                                    <div className="w-5 h-5 rounded-md bg-[#18181b] border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold text-zinc-400">3</div>
-                                    <span>All workspace productivity modules will initialize.</span>
+                                <li className="flex items-start gap-4">
+                                    <div className="w-6 h-6 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-zinc-600">03</div>
+                                    <span className="leading-relaxed">Sync with mission rankings starts immediately.</span>
                                 </li>
                             </ul>
                         </div>
 
-                        <div className="p-8 rounded-[2rem] border border-white/5 space-y-4 bg-transparent group hover:bg-[#121214] transition-colors duration-300">
-                            <h3 className="text-lg font-bold text-white tracking-tight">Need help?</h3>
-                            <p className="text-zinc-500 text-sm font-medium leading-relaxed">Check our official strategy guide for timeline planning tips and architectural advice.</p>
-                            <a href="#" className="flex items-center gap-1 text-indigo-400 text-sm font-bold hover:gap-2 transition-all mt-4 w-max">
-                                View strategy guide <ArrowRight className="w-4 h-4" />
-                            </a>
+                        <div className="p-10 rounded-[2.5rem] border border-white/5 space-y-4 bg-transparent hover:bg-zinc-900/40 transition-colors duration-500 group">
+                            <h3 className="text-lg font-bold text-white tracking-tight group-hover:text-rose-500 transition-colors">Launch guide</h3>
+                            <p className="text-zinc-500 text-sm font-medium leading-relaxed">Ensure your team name matches your event registration for live leaderboard telemetry.</p>
                         </div>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ export default function InviteActions({ eventId, count }: { eventId: string, cou
             });
             if (res.ok) {
                 alert("Invitations sent successfully!");
-                router.refresh(); // Refresh RSC component to show updated lists
+                router.refresh();
             } else {
                 alert("Failed to send invitations.");
             }
@@ -35,9 +35,10 @@ export default function InviteActions({ eventId, count }: { eventId: string, cou
         <button
             onClick={handleInviteAll}
             disabled={isInviting}
-            className="bg-amber-500 hover:bg-amber-400 text-black px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2 group disabled:opacity-50"
+            className="bg-rose-500 hover:bg-rose-400 text-white px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-3 group disabled:opacity-50 shadow-lg shadow-rose-500/10"
         >
-            {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" /> Invite All Pending</>}
+            {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />}
+            Invite Queue
         </button>
     );
 }

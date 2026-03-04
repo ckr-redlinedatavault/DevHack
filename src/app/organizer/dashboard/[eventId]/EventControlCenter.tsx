@@ -33,31 +33,31 @@ export default function EventControlCenter({ eventId, initialStatus, initialPhas
     };
 
     return (
-        <div className="bg-[#121214] border border-white/5 rounded-3xl p-8 space-y-8">
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
+        <div className="bg-zinc-950 border border-white/5 rounded-3xl p-8 space-y-10">
+            <div className="flex items-center justify-between border-b border-white/5 pb-6">
                 <div className="flex items-center gap-3">
-                    <Settings className="w-6 h-6 text-rose-500" />
-                    <h2 className="text-xl font-bold text-white text-pretty">Organizer Control Center</h2>
+                    <Settings className="w-5 h-5 text-zinc-500" />
+                    <h2 className="text-lg font-bold text-white tracking-tight">System Controls</h2>
                 </div>
-                <div className="bg-rose-500/10 text-rose-500 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-                    Live Controls
+                <div className="bg-rose-500/10 text-rose-500 border border-rose-500/20 px-3 py-1 rounded-full text-xs font-bold transition-all">
+                    Active System
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                 {/* Event Status */}
                 <div className="space-y-4">
-                    <label className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Global Status</label>
+                    <label className="text-xs text-zinc-600 font-bold">Lifecycle Status</label>
                     <div className="grid grid-cols-2 gap-2">
                         {["UPCOMING", "LIVE", "JUDGING", "ENDED"].map((s) => (
                             <button
                                 key={s}
                                 onClick={() => { setStatus(s); updateEvent({ status: s }); }}
                                 disabled={loading}
-                                className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${status === s ? "bg-rose-500 text-white" : "bg-black border border-white/5 text-zinc-500 hover:border-rose-500/30"
+                                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${status === s ? "bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/10" : "bg-black border-white/5 text-zinc-500 hover:border-white/20"
                                     }`}
                             >
-                                {s}
+                                {s.toLowerCase()}
                             </button>
                         ))}
                     </div>
@@ -65,43 +65,35 @@ export default function EventControlCenter({ eventId, initialStatus, initialPhas
 
                 {/* Current Phase */}
                 <div className="space-y-4">
-                    <label className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Active Round / Phase</label>
+                    <label className="text-xs text-zinc-600 font-bold">Active Phase</label>
                     <div className="flex gap-2">
                         <input
                             value={phase}
                             onChange={(e) => setPhase(e.target.value)}
                             onBlur={() => updateEvent({ currentPhase: phase })}
-                            className="bg-black border border-white/5 rounded-xl px-4 py-2 text-sm text-white w-full outline-none focus:border-rose-500/50"
-                            placeholder="e.g. Hacking, Finals"
+                            className="bg-black border border-white/5 rounded-xl px-4 py-2 text-sm text-white w-full outline-none focus:border-rose-500/40 transition-all font-medium"
+                            placeholder="e.g. Round 1"
                         />
-                    </div>
-                    <div className="flex flex-wrap gap-2 text-[10px] text-zinc-600 font-bold">
-                        {["Opening", "Hacking", "Judging", "Announcing"].map(p => (
-                            <button key={p} onClick={() => { setPhase(p); updateEvent({ currentPhase: p }); }} className="bg-white/5 px-2 py-1 rounded-md hover:text-white transition-colors">{p}</button>
-                        ))}
                     </div>
                 </div>
 
                 {/* Revelation Mode */}
                 <div className="space-y-4">
-                    <label className="text-xs text-zinc-500 font-bold uppercase tracking-widest text-pretty">Ceremony Reveal Mode</label>
+                    <label className="text-xs text-zinc-600 font-bold">Reveal Protocol</label>
                     <button
                         onClick={() => { setIsRevealing(!isRevealing); updateEvent({ isRevealing: !isRevealing }); }}
                         disabled={loading}
                         className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all border ${isRevealing
-                                ? "bg-amber-500/10 border-amber-500/50 text-amber-500"
-                                : "bg-black border-white/5 text-zinc-500"
+                            ? "bg-rose-500 text-white border-rose-500"
+                            : "bg-black border-white/5 text-zinc-500 hover:border-white/20"
                             }`}
                     >
-                        <span className="font-bold flex items-center gap-2">
-                            {isRevealing ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-                            {isRevealing ? "REVEAL ACTIVE" : "STAY HIDDEN"}
+                        <span className="font-bold text-xs flex items-center gap-2 tracking-tight">
+                            {isRevealing ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                            {isRevealing ? "Reveal Active" : "Leaderboard Hidden"}
                         </span>
-                        <div className={`w-12 h-6 rounded-full relative transition-colors ${isRevealing ? 'bg-amber-500' : 'bg-zinc-800'}`}>
-                            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${isRevealing ? 'right-1' : 'left-1'}`} />
-                        </div>
                     </button>
-                    <p className="text-[10px] text-zinc-600">Reveal mode forces audience screen to hold results until ceremony reveal.</p>
+                    <p className="text-xs text-zinc-600 font-medium leading-relaxed mt-2">Manage audience-facing state.</p>
                 </div>
             </div>
         </div>
