@@ -79,33 +79,7 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Features Row - Simple Text Base */}
-          <div className="pt-10 md:pt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 opacity-70 hover:opacity-100 transition-opacity duration-500">
-            {/* Feature 1 */}
-            <div className="flex items-start gap-3 group">
-              <Activity className="w-4 h-4 text-zinc-600 group-hover:text-[#4f46e5] mt-0.5 transition-colors" />
-              <div className="space-y-0.5 text-left">
-                <h3 className="text-xs font-medium text-zinc-300 tracking-wide">Live Sync</h3>
-                <p className="text-[11px] text-zinc-600 font-light">0ms latency relay</p>
-              </div>
-            </div>
-            {/* Feature 2 */}
-            <div className="flex items-start gap-3 group">
-              <ShieldAlert className="w-4 h-4 text-zinc-600 group-hover:text-[#4f46e5] mt-0.5 transition-colors" />
-              <div className="space-y-0.5 text-left">
-                <h3 className="text-xs font-medium text-zinc-300 tracking-wide">Vaulted Docs</h3>
-                <p className="text-[11px] text-zinc-600 font-light">Encrypted workspace</p>
-              </div>
-            </div>
-            {/* Feature 3 */}
-            <div className="flex items-start gap-3 group">
-              <Code2 className="w-4 h-4 text-zinc-600 group-hover:text-[#4f46e5] mt-0.5 transition-colors" />
-              <div className="space-y-0.5 text-left">
-                <h3 className="text-xs font-medium text-zinc-300 tracking-wide">Telemetry</h3>
-                <p className="text-[11px] text-zinc-600 font-light">Live rank sync</p>
-              </div>
-            </div>
-          </div>
+
 
         </div>
       </main>
