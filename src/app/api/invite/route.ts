@@ -34,7 +34,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Team not found or access denied" }, { status: 403 });
         }
 
-        const senderName = team.members[0].user.name;
+        const senderName = team.members[0].user.name || "A teammate";
 
         const result = await sendInviteEmail(
             email,

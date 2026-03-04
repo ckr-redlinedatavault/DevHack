@@ -3,32 +3,35 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 function generateProfessionalCode(): string {
-    const prefixes = ["DEV", "TEAM", "HACK"];
-    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let suffix = "";
-    for (let i = 0; i < 5; i++) {
-        suffix += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return `${prefix}-${suffix}`;
+  const prefixes = ["DEV", "TEAM", "HACK"];
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let suffix = "";
+  for (let i = 0; i < 5; i++) {
+    suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `${prefix}-${suffix}`;
 }
 
 export async function sendInviteEmail(
-    toEmail: string,
-    inviteCode: string,
-    teamName: string,
-    projectName: string,
-    senderName: string
+  toEmail: string,
+  inviteCode: string,
+  teamName: string,
+  projectName: string,
+  senderName: string
 ) {
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const inviteLink = `${baseUrl}/join/${inviteCode}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const inviteLink = `${baseUrl}/join/${inviteCode}`;
+  const fromEmail = process.env.EMAIL_FROM || "DevHack <onboarding@resend.dev>";
 
-    try {
-        const data = await resend.emails.send({
-            from: process.env.EMAIL_FROM!,
-            to: toEmail,
-            subject: `${senderName} invited you to join ${teamName} on DevHack`,
-            html: `
+  console.log(`Attempting to send email to ${toEmail} from ${fromEmail}`);
+
+  try {
+    const data = await resend.emails.send({
+      from: fromEmail,
+      to: toEmail,
+      subject: `${senderName} invited you to join ${teamName} on DevHack`,
+      html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -101,13 +104,13 @@ export async function sendInviteEmail(
 </body>
 </html>
             `,
-        });
+    });
 
-        return { success: true, data };
-    } catch (error) {
-        console.error("Email send error:", error);
-        return { success: false, error };
-    }
+    return { success: true, data };
+  } catch (error) {
+    console.error("Email send error:", error);
+    return { success: false, error };
+  }
 }
 
 export { generateProfessionalCode };
