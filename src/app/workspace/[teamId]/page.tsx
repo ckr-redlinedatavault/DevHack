@@ -354,24 +354,62 @@ function TasksModule({ teamId, initialTasks }: { teamId: string, initialTasks: a
                     const statusKey = col === "To Do" ? "todo" : col.toLowerCase().replace(" ", "_");
                     const colTasks = tasks?.filter(t => t.status?.toLowerCase() === statusKey);
 
+                    let colorTheme = {
+                        bg: "bg-zinc-900/30",
+                        border: "border-zinc-800/50",
+                        hoverBorder: "hover:border-zinc-700",
+                        dot: "bg-zinc-500",
+                        text: "text-zinc-200"
+                    };
+
+                    if (statusKey === "todo") {
+                        colorTheme = {
+                            bg: "bg-amber-500/5",
+                            border: "border-amber-500/10",
+                            hoverBorder: "hover:border-amber-500/30",
+                            dot: "bg-amber-400",
+                            text: "text-amber-100"
+                        };
+                    } else if (statusKey === "in_progress") {
+                        colorTheme = {
+                            bg: "bg-indigo-500/5",
+                            border: "border-indigo-500/10",
+                            hoverBorder: "hover:border-indigo-500/30",
+                            dot: "bg-indigo-400",
+                            text: "text-indigo-100"
+                        };
+                    } else if (statusKey === "done") {
+                        colorTheme = {
+                            bg: "bg-emerald-500/5",
+                            border: "border-emerald-500/10",
+                            hoverBorder: "hover:border-emerald-500/30",
+                            dot: "bg-emerald-400",
+                            text: "text-emerald-100"
+                        };
+                    }
+
                     return (
                         <div key={col} className="space-y-4">
-                            <div className="flex items-center justify-between px-2">
-                                <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">{col}</h3>
-                                <span className="text-[10px] bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded text-zinc-500 uppercase font-mono">
+                            <div className="flex items-center justify-between px-1">
+                                <div className="flex items-center gap-2">
+                                    <span className={`w-2 h-2 rounded-full ${colorTheme.dot}`} />
+                                    <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-400">{col}</h3>
+                                </div>
+                                <span className="text-[10px] text-zinc-500 font-medium bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded-full">
                                     {colTasks?.length || 0}
                                 </span>
                             </div>
 
-                            <div className="space-y-3 min-h-[500px] border-2 border-dashed border-zinc-900/50 rounded-2xl p-2 bg-black/20">
-                                {colTasks?.map((task, i) => (
-                                    <div key={task.id} className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all group">
-                                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors capitalize">{task.title}</p>
-                                        <div className="flex items-center justify-between mt-4">
+                            <div className="space-y-3 min-h-[500px] border border-white/5 rounded-3xl p-3 bg-white/[0.01]">
+                                {colTasks?.map((task) => (
+                                    <div key={task.id} className={`p-5 rounded-2xl ${colorTheme.bg} border ${colorTheme.border} ${colorTheme.hoverBorder} transition-all duration-300 group`}>
+                                        <p className={`text-sm font-medium leading-relaxed ${colorTheme.text}`}>{task.title}</p>
+
+                                        <div className="flex items-center justify-between mt-6">
                                             <select
                                                 value={task.status}
                                                 onChange={(e) => updateTaskStatus(task.id, e.target.value)}
-                                                className="bg-black/50 border border-zinc-800 text-xs px-2 py-1 rounded-lg text-zinc-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                                className="bg-black/30 border border-white/5 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1.5 rounded-lg text-zinc-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer hover:bg-black/50 hover:text-white transition-colors"
                                             >
                                                 <option value="BACKLOG">Backlog</option>
                                                 <option value="TODO">To Do</option>
@@ -379,15 +417,15 @@ function TasksModule({ teamId, initialTasks }: { teamId: string, initialTasks: a
                                                 <option value="DONE">Done</option>
                                             </select>
 
-                                            <button onClick={() => deleteTask(task.id)} className="text-zinc-600 hover:text-rose-500 transition-colors">
+                                            <button onClick={() => deleteTask(task.id)} className="text-zinc-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all p-1.5 hover:bg-rose-500/10 rounded-lg">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
                                     </div>
                                 ))}
                                 {(!colTasks || colTasks.length === 0) && (
-                                    <div className="h-20 flex items-center justify-center text-zinc-600 text-xs font-semibold uppercase tracking-widest">
-                                        Empty
+                                    <div className="h-28 flex flex-col items-center justify-center text-zinc-600 border border-dashed border-zinc-800/50 rounded-2xl">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest opacity-50">Empty</p>
                                     </div>
                                 )}
                             </div>
