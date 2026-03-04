@@ -16,7 +16,9 @@ import {
     Search as SearchIcon,
     Bell,
     Globe,
-    LogOut
+    LogOut,
+    Menu,
+    X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +27,7 @@ export default function DashboardPage() {
     const [teams, setTeams] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [time, setTime] = useState(new Date());
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
@@ -58,9 +61,17 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white selection:bg-indigo-500/30 flex">
+        <div className="min-h-screen bg-[#09090b] text-white selection:bg-indigo-500/30 flex overflow-x-hidden">
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-72 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-50 transition-all">
+            <aside className={`w-72 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-[60] transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
                 <div className="flex flex-col items-center pt-2 pb-8 px-4 border-b border-white/5">
                     <div className="w-48 h-32 flex items-center justify-center">
                         <img
@@ -89,13 +100,21 @@ export default function DashboardPage() {
             </aside>
 
             {/* Main Area */}
-            <main className="flex-1 ml-72 min-h-screen">
+            <main className="flex-1 lg:ml-72 min-h-screen w-full transition-all">
                 {/* Top Header */}
-                <header className="h-16 border-b border-white/5 px-8 flex items-center justify-between bg-black sticky top-0 z-40">
-                    <div className="flex items-center gap-3">
-                        <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">DevHack</span>
-                        <div className="w-[1px] h-3 bg-zinc-800" />
-                        <span className="text-[11px] font-bold text-white uppercase tracking-widest">Dashboard</span>
+                <header className="h-16 border-b border-white/5 px-4 lg:px-8 flex items-center justify-between bg-black sticky top-0 z-40 w-full">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="lg:hidden p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white"
+                        >
+                            <Menu className="w-5 h-5" />
+                        </button>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-[9px] sm:text-[11px] font-bold text-zinc-500 uppercase tracking-widest hidden xs:block">DevHack</span>
+                            <div className="w-[1px] h-3 bg-zinc-800 hidden xs:block" />
+                            <span className="text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-widest">Dashboard</span>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-6">
@@ -121,23 +140,23 @@ export default function DashboardPage() {
                     </div>
                 </header>
 
-                <div className="p-12 max-w-6xl mx-auto space-y-12">
+                <div className="p-4 sm:p-8 lg:p-12 max-w-7xl mx-auto space-y-12">
                     {/* Hero Section */}
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                         <div className="space-y-3">
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.4)]" />
                                 <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Active Hub</span>
                             </div>
-                            <h2 className="text-3xl font-semibold text-white tracking-tight">Your Workspaces</h2>
-                            <p className="text-zinc-500 text-sm max-w-xl font-medium">
-                                select a workspace to continue building your innovation.
+                            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">Your Workspaces</h2>
+                            <p className="text-zinc-500 text-sm max-w-xl font-medium leading-relaxed">
+                                Select a workspace to continue building your innovation.
                             </p>
                         </div>
 
                         <Link
                             href="/create-team"
-                            className="flex items-center gap-3 px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-all shadow-lg shadow-white/5 group"
+                            className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-all shadow-lg shadow-white/5 group sm:w-auto w-full"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="text-[10px] uppercase tracking-widest">New Team</span>

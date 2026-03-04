@@ -41,7 +41,8 @@ import {
     Cpu,
     Code,
     Code2,
-    ChevronDown
+    ChevronDown,
+    Menu
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -71,6 +72,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
     const [isLoading, setIsLoading] = useState(true);
     const [activeModule, setActiveModule] = useState("overview");
     const [copied, setCopied] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         const fetchTeam = async () => {
@@ -139,9 +141,17 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
 
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white flex selection:bg-indigo-500/30">
+        <div className="min-h-screen bg-[#09090b] text-white flex selection:bg-indigo-500/30 overflow-x-hidden">
+            {/* Sidebar Overlay for Mobile */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-72 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-50 transition-all">
+            <aside className={`w-72 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-[60] transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full shadow-2xl"}`}>
                 <div className="">
                     <div className="flex flex-col items-center pt-2 pb-8 px-4 border-b border-white/5">
                         <div className="w-48 h-32 flex items-center justify-center">
@@ -164,7 +174,10 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                         {MODULES.map((mod) => (
                             <button
                                 key={mod.id}
-                                onClick={() => setActiveModule(mod.id)}
+                                onClick={() => {
+                                    setActiveModule(mod.id);
+                                    setIsSidebarOpen(false);
+                                }}
                                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${activeModule === mod.id
                                     ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/10"
                                     : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900"
@@ -198,39 +211,50 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
             </aside>
 
             {/* Main Area */}
-            <main className="flex-1 ml-72 min-h-screen bg-[#09090b]">
+            <main className="flex-1 lg:ml-72 min-h-screen bg-[#09090b] w-full transition-all">
                 {/* Top Header - Lean & Minimal */}
-                <header className="h-16 border-b border-white/5 px-8 flex items-center justify-between bg-black sticky top-0 z-40">
-                    <div className="flex items-center gap-3">
-                        <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Workspace</span>
-                        <div className="w-[1px] h-3 bg-zinc-800" />
-                        <span className="text-[11px] font-bold text-white uppercase tracking-widest">{activeModule.replace('-', ' ')}</span>
+                <header className="h-16 border-b border-white/5 px-4 lg:px-8 flex items-center justify-between bg-black sticky top-0 z-40 w-full">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="lg:hidden p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white"
+                        >
+                            <Menu className="w-5 h-5" />
+                        </button>
+
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-[9px] sm:text-[11px] font-bold text-zinc-500 uppercase tracking-widest hidden xs:block">Workspace</span>
+                            <div className="w-[1px] h-3 bg-zinc-800 hidden xs:block" />
+                            <span className="text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-widest truncate max-w-[100px] sm:max-w-none">
+                                {activeModule.replace('-', ' ')}
+                            </span>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <div className="relative group hidden lg:block">
+                        <div className="relative group hidden sm:block">
                             <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
                             <input
-                                className="w-64 bg-transparent border-none focus:ring-0 text-xs text-zinc-300 placeholder:text-zinc-600 outline-none pl-9"
+                                className="w-40 md:w-64 bg-transparent border-none focus:ring-0 text-xs text-zinc-300 placeholder:text-zinc-600 outline-none pl-9"
                                 placeholder="Search..."
                             />
                         </div>
 
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 sm:gap-4">
                             <button className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black hover:bg-zinc-200 transition-colors">
                                 <Bell className="w-4 h-4" />
                             </button>
 
                             <div className="h-4 w-px bg-zinc-800" />
 
-                            <button className="flex items-center gap-3 group">
+                            <button className="flex items-center gap-2 sm:gap-3 group">
                                 <div className="text-right hidden sm:block">
                                     <p className="text-[10px] font-black text-white uppercase tracking-[0.1em]">
                                         {team.members?.[0]?.user?.name || "User"}
                                     </p>
                                     <p className="text-[8px] font-bold text-zinc-500 uppercase tracking-tighter opacity-60">Admin</p>
                                 </div>
-                                <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-[#27272a] flex items-center justify-center text-[10px] font-bold text-zinc-400 group-hover:border-zinc-500 transition-all">
+                                <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-[#27272a] flex items-center justify-center text-[10px] font-bold text-zinc-400 group-hover:border-zinc-500 transition-all shrink-0">
                                     {team.members?.[0]?.user?.name?.[0] || "U"}
                                 </div>
                             </button>
@@ -239,7 +263,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                 </header>
 
                 {/* Content Modules */}
-                <div className="p-8">
+                <div className="p-4 sm:p-6 lg:p-8">
                     {activeModule === "overview" && <OverviewModule team={team} setActiveModule={setActiveModule} />}
                     {activeModule === "tasks" && <TasksModule teamId={teamId} initialTasks={team.tasks || []} />}
                     {activeModule === "resources" && <ResourcesModule teamId={teamId} initialResources={team.resources || []} />}
@@ -1892,7 +1916,7 @@ function LLMModule() {
                 </div>
             </div>
 
-            <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[2.5rem] p-8 flex flex-col relative overflow-hidden">
+            <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col relative overflow-hidden">
                 <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 max-w-lg mx-auto">
                     <div className="w-20 h-20 rounded-[2.5rem] bg-black border border-white/5 flex items-center justify-center shadow-2xl shadow-indigo-500/10 mb-2">
                         <Bot className="w-10 h-10 text-white" />
