@@ -700,6 +700,9 @@ function SubmissionModule({ teamId, initialSubmission }: { teamId: string, initi
     const [sub, setSub] = useState(initialSubmission || { problemStatement: "", solution: "", videoUrl: "" });
     const [isSaving, setIsSaving] = useState(false);
 
+    const hasData = Boolean(sub.problemStatement || sub.solution || sub.techStack || sub.videoUrl);
+    const [isEditing, setIsEditing] = useState(!hasData);
+
     const handleSave = async () => {
         setIsSaving(true);
         try {
@@ -711,6 +714,7 @@ function SubmissionModule({ teamId, initialSubmission }: { teamId: string, initi
             if (res.ok) {
                 const updated = await res.json();
                 setSub(updated);
+                setIsEditing(false);
             }
         } finally {
             setIsSaving(false);
@@ -724,74 +728,140 @@ function SubmissionModule({ teamId, initialSubmission }: { teamId: string, initi
                     <h2 className="text-2xl font-bold">Submission Builder</h2>
                     <p className="text-zinc-500 text-sm">Prepare and finalize your project details for judging.</p>
                 </div>
-                <Button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="bg-white text-black hover:bg-zinc-200 h-10 px-6 font-medium rounded-lg transition-all shadow-none flex items-center gap-2 shrink-0"
-                >
-                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                    <span>{isSaving ? "Saving..." : "Save Submission"}</span>
-                </Button>
+                {isEditing ? (
+                    <Button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="bg-white text-black hover:bg-zinc-200 h-10 px-6 font-medium rounded-lg transition-all shadow-none flex items-center gap-2 shrink-0"
+                    >
+                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        <span>{isSaving ? "Saving..." : "Save Submission"}</span>
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={() => setIsEditing(true)}
+                        className="bg-[#18181b] text-white border border-[#27272a] hover:bg-[#27272a] h-10 px-6 font-medium rounded-lg transition-all shadow-none flex items-center gap-2 shrink-0"
+                    >
+                        <Settings className="w-4 h-4" />
+                        <span>Edit Submission</span>
+                    </Button>
+                )}
             </div>
 
-            <div className="space-y-6">
-                <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-rose-500" />
-                        The Problem
-                    </h3>
-                    <div className="space-y-2">
-                        <textarea
-                            value={sub.problemStatement || ""}
-                            onChange={e => setSub({ ...sub, problemStatement: e.target.value })}
-                            className="w-full bg-[#18181b] border border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-xl p-5 text-zinc-300 min-h-[140px] transition-all resize-y custom-scrollbar text-sm leading-relaxed"
-                            placeholder="Describe the problem your team identified in the market or society..."
-                        />
-                    </div>
-                </div>
-
-                <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                        Our Solution
-                    </h3>
-                    <div className="space-y-2">
-                        <textarea
-                            value={sub.solution || ""}
-                            onChange={e => setSub({ ...sub, solution: e.target.value })}
-                            className="w-full bg-[#18181b] border border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-xl p-5 text-zinc-300 min-h-[180px] transition-all resize-y custom-scrollbar text-sm leading-relaxed"
-                            placeholder="Explain how your project solves the problem, your architecture, and key features..."
-                        />
-                    </div>
-                </div>
-
-                <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-cyan-500" />
-                        Technical Details
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {isEditing ? (
+                <div className="space-y-6">
+                    <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-rose-500" />
+                            The Problem
+                        </h3>
                         <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Tech Stack</label>
-                            <Input
-                                value={sub.techStack || ""}
-                                onChange={e => setSub({ ...sub, techStack: e.target.value })}
-                                className="bg-[#18181b] border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-lg h-12 text-sm text-zinc-300 px-4 transition-all"
-                                placeholder="Next.js, Prisma, Tailwind..."
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Demo Video URL</label>
-                            <Input
-                                value={sub.videoUrl || ""}
-                                onChange={e => setSub({ ...sub, videoUrl: e.target.value })}
-                                className="bg-[#18181b] border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-lg h-12 text-sm text-zinc-300 px-4 transition-all"
-                                placeholder="https://youtube.com/..."
+                            <textarea
+                                value={sub.problemStatement || ""}
+                                onChange={e => setSub({ ...sub, problemStatement: e.target.value })}
+                                className="w-full bg-[#18181b] border border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-xl p-5 text-zinc-300 min-h-[140px] transition-all resize-y custom-scrollbar text-sm leading-relaxed"
+                                placeholder="Describe the problem your team identified in the market or society..."
                             />
                         </div>
                     </div>
+
+                    <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                            Our Solution
+                        </h3>
+                        <div className="space-y-2">
+                            <textarea
+                                value={sub.solution || ""}
+                                onChange={e => setSub({ ...sub, solution: e.target.value })}
+                                className="w-full bg-[#18181b] border border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-xl p-5 text-zinc-300 min-h-[180px] transition-all resize-y custom-scrollbar text-sm leading-relaxed"
+                                placeholder="Explain how your project solves the problem, your architecture, and key features..."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-cyan-500" />
+                            Technical Details
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Tech Stack</label>
+                                <Input
+                                    value={sub.techStack || ""}
+                                    onChange={e => setSub({ ...sub, techStack: e.target.value })}
+                                    className="bg-[#18181b] border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-lg h-12 text-sm text-zinc-300 px-4 transition-all"
+                                    placeholder="Next.js, Prisma, Tailwind..."
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Demo Video URL</label>
+                                <Input
+                                    value={sub.videoUrl || ""}
+                                    onChange={e => setSub({ ...sub, videoUrl: e.target.value })}
+                                    className="bg-[#18181b] border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-lg h-12 text-sm text-zinc-300 px-4 transition-all"
+                                    placeholder="https://youtube.com/..."
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="space-y-6">
+                    <div className="bg-[#121214] border border-[#27272a] rounded-3xl p-8 md:p-10 space-y-10">
+                        <div>
+                            <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-3 mb-4">
+                                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.5)]" />
+                                The Problem
+                            </h3>
+                            <p className="text-zinc-300 text-[15px] leading-relaxed whitespace-pre-wrap pl-6">{sub.problemStatement || "No problem statement provided."}</p>
+                        </div>
+
+                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#27272a] to-transparent" />
+
+                        <div>
+                            <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-3 mb-4">
+                                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]" />
+                                Our Solution
+                            </h3>
+                            <p className="text-zinc-300 text-[15px] leading-relaxed whitespace-pre-wrap pl-6">{sub.solution || "No solution provided."}</p>
+                        </div>
+
+                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#27272a] to-transparent" />
+
+                        <div>
+                            <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-3 mb-6">
+                                <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_12px_rgba(6,182,212,0.5)]" />
+                                Technical Details
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pl-6">
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3 block">Tech Stack</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {sub.techStack ? sub.techStack.split(',').map((tech: string, i: number) => (
+                                            <span key={i} className="px-3 py-1.5 bg-[#18181b] border border-[#27272a] rounded-lg text-xs font-semibold text-zinc-300">
+                                                {tech.trim()}
+                                            </span>
+                                        )) : <span className="text-zinc-600 text-sm">Not provided</span>}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3 block">Demo Video</p>
+                                    {sub.videoUrl ? (
+                                        <a href={sub.videoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg text-sm font-semibold text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all">
+                                            <ExternalLink className="w-4 h-4" />
+                                            Watch Demo
+                                        </a>
+                                    ) : (
+                                        <span className="text-zinc-600 text-sm">Not provided</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
