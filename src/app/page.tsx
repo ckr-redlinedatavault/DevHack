@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { ArrowRight, Zap, Users, Layout, Rocket, Github, Globe, Code, Menu, X } from "lucide-react";
 import Image from "next/image";
