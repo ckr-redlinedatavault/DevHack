@@ -718,58 +718,79 @@ function SubmissionModule({ teamId, initialSubmission }: { teamId: string, initi
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tight">Submission Builder</h2>
-                <p className="text-zinc-500 text-lg">Build weights for your project's final profile.</p>
+        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-bold">Submission Builder</h2>
+                    <p className="text-zinc-500 text-sm">Prepare and finalize your project details for judging.</p>
+                </div>
+                <Button
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className="bg-white text-black hover:bg-zinc-200 h-10 px-6 font-medium rounded-lg transition-all shadow-none flex items-center gap-2 shrink-0"
+                >
+                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    <span>{isSaving ? "Saving..." : "Save Submission"}</span>
+                </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-400">Problem Statement</label>
-                    <textarea
-                        value={sub.problemStatement || ""}
-                        onChange={e => setSub({ ...sub, problemStatement: e.target.value })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-white min-h-[100px] focus:outline-none focus:border-indigo-500"
-                        placeholder="What problem are you solving?"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-400">Our Solution</label>
-                    <textarea
-                        value={sub.solution || ""}
-                        onChange={e => setSub({ ...sub, solution: e.target.value })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-white min-h-[120px] focus:outline-none focus:border-indigo-500"
-                        placeholder="Explain your technical solution..."
-                    />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-6">
+                <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
+                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-rose-500" />
+                        The Problem
+                    </h3>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-400">Tech Stack</label>
-                        <Input
-                            value={sub.techStack || ""}
-                            onChange={e => setSub({ ...sub, techStack: e.target.value })}
-                            className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl h-12"
-                            placeholder="Next.js, Prisma, Tailwind..."
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-400">Demo Video URL</label>
-                        <Input
-                            value={sub.videoUrl || ""}
-                            onChange={e => setSub({ ...sub, videoUrl: e.target.value })}
-                            className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl h-12"
-                            placeholder="https://youtube.com/..."
+                        <textarea
+                            value={sub.problemStatement || ""}
+                            onChange={e => setSub({ ...sub, problemStatement: e.target.value })}
+                            className="w-full bg-[#18181b] border border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-xl p-5 text-zinc-300 min-h-[140px] transition-all resize-y custom-scrollbar text-sm leading-relaxed"
+                            placeholder="Describe the problem your team identified in the market or society..."
                         />
                     </div>
                 </div>
 
-                <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-2xl shadow-indigo-600/20 text-lg flex items-center gap-2 group mt-4">
-                    {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Rocket className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
-                    {isSaving ? "Saving..." : "Save Submission Details"}
-                </Button>
+                <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
+                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                        Our Solution
+                    </h3>
+                    <div className="space-y-2">
+                        <textarea
+                            value={sub.solution || ""}
+                            onChange={e => setSub({ ...sub, solution: e.target.value })}
+                            className="w-full bg-[#18181b] border border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-xl p-5 text-zinc-300 min-h-[180px] transition-all resize-y custom-scrollbar text-sm leading-relaxed"
+                            placeholder="Explain how your project solves the problem, your architecture, and key features..."
+                        />
+                    </div>
+                </div>
+
+                <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-6">
+                    <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-cyan-500" />
+                        Technical Details
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Tech Stack</label>
+                            <Input
+                                value={sub.techStack || ""}
+                                onChange={e => setSub({ ...sub, techStack: e.target.value })}
+                                className="bg-[#18181b] border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-lg h-12 text-sm text-zinc-300 px-4 transition-all"
+                                placeholder="Next.js, Prisma, Tailwind..."
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Demo Video URL</label>
+                            <Input
+                                value={sub.videoUrl || ""}
+                                onChange={e => setSub({ ...sub, videoUrl: e.target.value })}
+                                className="bg-[#18181b] border-[#27272a] focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] rounded-lg h-12 text-sm text-zinc-300 px-4 transition-all"
+                                placeholder="https://youtube.com/..."
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
