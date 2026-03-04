@@ -21,7 +21,7 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
 
     if (!event) redirect("/organizer/dashboard");
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://dev-hack-v2-xi.vercel.app";
     const publicLink = `${appUrl}/event/${event.id}`;
 
     const stats = [

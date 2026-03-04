@@ -88,7 +88,7 @@ Create a `.env` file with the following keys:
 DATABASE_URL="postgresql://..."
 REDIS_URL="redis://..."
 NEXTAUTH_SECRET="..."
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEXT_PUBLIC_APP_URL="https://dev-hack-v2-xi.vercel.app"
 ```
 
 4. **Initialize System**

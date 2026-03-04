@@ -33,7 +33,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
             },
         });
 
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
         const liveEventUrl = `${baseUrl}/event/${eventId}/live`;
 
         // Send emails and update status concurrently

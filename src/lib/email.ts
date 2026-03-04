@@ -18,7 +18,7 @@ export async function sendInviteEmail(
   projectName: string,
   senderName: string
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
   const inviteLink = `${baseUrl}/join/${inviteCode}`;
   const fromEmail = process.env.GMAIL_USER;
 
@@ -136,7 +136,7 @@ export async function sendPasswordResetEmail(
   resetToken: string,
   userName: string
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
   const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
   const fromEmail = process.env.GMAIL_USER;
 
