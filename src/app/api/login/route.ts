@@ -25,6 +25,14 @@ export async function POST(req: Request) {
             );
         }
 
+        // If the user signed up using Google (no password set), throw an error
+        if (!user.password) {
+            return NextResponse.json(
+                { message: "Please sign in with Google" },
+                { status: 401 }
+            );
+        }
+
         // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
 

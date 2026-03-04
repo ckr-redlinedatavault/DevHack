@@ -181,7 +181,7 @@ export default function DbTestPage() {
                                         >
                                             <div className="flex justify-between items-start">
                                                 <div>
-                                                    <p className="font-semibold text-white group-hover:text-indigo-300 transition-colors uppercase tracking-wider text-xs mb-1">
+                                                    <p className="font-semibold text-white group-hover:text-indigo-300 transition-colors text-xs mb-1">
                                                         {user.name || "Anonymous User"}
                                                     </p>
                                                     <p className="text-sm text-zinc-400 font-mono">{user.email}</p>
@@ -200,7 +200,7 @@ export default function DbTestPage() {
 
                 {/* Instructions/Logs */}
                 <div className="rounded-2xl bg-zinc-900/30 border border-zinc-800/50 p-6">
-                    <h3 className="text-sm font-semibold text-zinc-300 uppercase tracking-widest mb-4">Connection Details</h3>
+                    <h3 className="text-sm font-semibold text-zinc-300 mb-4">Connection details</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-1">
                             <p className="text-xs text-zinc-500 font-medium">Provider</p>

@@ -7,10 +7,7 @@ import {
     Plus,
     Settings,
     Users,
-    ChevronRight,
     Rocket,
-    Trophy,
-    Clock,
     ArrowRight,
     Loader2,
     Search as SearchIcon,
@@ -18,10 +15,9 @@ import {
     Globe,
     LogOut,
     Menu,
-    X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { signOut } from "next-auth/react";
 
 export default function DashboardPage() {
     const [teams, setTeams] = useState<any[]>([]);
@@ -55,7 +51,7 @@ export default function DashboardPage() {
     const handleLogout = async () => {
         try {
             await fetch("/api/logout", { method: "POST" });
-            window.location.href = "/login";
+            signOut({ callbackUrl: "/login" });
         } catch (err) {
             console.error("Logout failed");
         }
@@ -105,7 +101,7 @@ export default function DashboardPage() {
                         className="w-full h-11 bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 group"
                     >
                         <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-[10px] uppercase tracking-widest leading-none">Sign Out</span>
+                        <span className="text-xs font-semibold">Sign Out</span>
                     </button>
                 </div>
             </aside>
@@ -122,9 +118,9 @@ export default function DashboardPage() {
                             <Menu className="w-5 h-5" />
                         </button>
                         <div className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-[9px] sm:text-[11px] font-bold text-zinc-500 uppercase tracking-widest hidden xs:block">DevHack</span>
+                            <span className="text-[9px] sm:text-[11px] font-bold text-zinc-500 hidden xs:block">DevHack</span>
                             <div className="w-[1px] h-3 bg-zinc-800 hidden xs:block" />
-                            <span className="text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-widest">Dashboard</span>
+                            <span className="text-[9px] sm:text-[11px] font-bold text-white">Dashboard</span>
                         </div>
                     </div>
 
@@ -157,7 +153,7 @@ export default function DashboardPage() {
                         <div className="space-y-3">
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.4)]" />
-                                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Active Hub</span>
+                                <span className="text-[10px] font-bold text-zinc-500">Active hub</span>
                             </div>
                             <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">Your Workspaces</h2>
                             <p className="text-zinc-500 text-sm max-w-xl font-medium leading-relaxed">
@@ -170,7 +166,7 @@ export default function DashboardPage() {
                             className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-all shadow-lg shadow-white/5 group sm:w-auto w-full"
                         >
                             <Plus className="w-4 h-4" />
-                            <span className="text-[10px] uppercase tracking-widest">New Team</span>
+                            <span className="text-xs font-bold leading-none">New team</span>
                         </Link>
                     </div>
 
@@ -183,7 +179,7 @@ export default function DashboardPage() {
                                         <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
                                             <Rocket className="w-5 h-5" />
                                         </div>
-                                        <div className="px-2.5 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-[8px] font-black text-emerald-500 uppercase tracking-widest">
+                                        <div className="px-2.5 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-[8px] font-black text-emerald-500">
                                             Active
                                         </div>
                                     </div>
@@ -217,7 +213,7 @@ export default function DashboardPage() {
                                     <Plus className="w-5 h-5 text-zinc-600 group-hover:text-indigo-400" />
                                 </div>
                                 <div className="text-center">
-                                    <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Join Another Workspace</p>
+                                    <p className="text-zinc-500 text-xs font-bold">Join another workspace</p>
                                     <p className="text-zinc-600 text-[10px] mt-1">Ready for more innovation?</p>
                                 </div>
                             </div>

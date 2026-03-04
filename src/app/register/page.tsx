@@ -138,8 +138,8 @@ export default function RegisterPage() {
                                 <div className="absolute inset-0 flex items-center">
                                     <div className="w-full border-t border-white/5"></div>
                                 </div>
-                                <div className="relative flex justify-center text-[10px] font-bold">
-                                    <span className="bg-[#121214] px-4 text-zinc-600 uppercase tracking-widest leading-none">Or continue with</span>
+                                <div className="relative flex justify-center text-xs font-medium">
+                                    <span className="bg-[#121214] px-4 text-zinc-600 leading-none">Or continue with</span>
                                 </div>
                             </div>
 

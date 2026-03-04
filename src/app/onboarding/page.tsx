@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PlusCircle, Users, ArrowRight, Layout, Rocket } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -9,17 +10,28 @@ export default function OnboardingPage() {
     const router = useRouter();
 
     return (
-        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 selection:bg-indigo-500/30">
-            <div className="absolute top-0 inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(79,70,229,0.1),transparent_50%)]" />
+        <div className="min-h-screen bg-[#09090b] text-white flex flex-col items-center justify-center p-6 selection:bg-indigo-500/30 relative overflow-hidden">
+            {/* Logo at top left */}
+            <div className="absolute top-8 left-8 z-50">
+                <Link href="/" className="transition-transform hover:scale-105 duration-300">
+                    <img
+                        src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
+                        alt="DevHack Logo"
+                        className="h-16 w-auto object-contain"
+                    />
+                </Link>
+            </div>
 
-            <div className="max-w-3xl w-full space-y-12">
+            <div className="absolute top-0 inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(79,70,229,0.05),transparent_50%)]" />
+
+            <div className="max-w-3xl w-full space-y-12 relative">
                 <div className="text-center space-y-4">
-                    <div className="inline-flex py-1 px-3 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest">
-                        Onboarding
+                    <div className="inline-flex py-1 px-3 rounded-full bg-indigo-500/5 border border-indigo-500/10 text-indigo-400 text-xs font-medium">
+                        Welcome to DevHack
                     </div>
                     <h1 className="text-4xl md:text-6xl font-bold tracking-tight">Step into your workspace.</h1>
-                    <p className="text-zinc-500 text-lg max-w-xl mx-auto">
-                        Choose how you'd like to start your DevHack journey. Create a team from scratch or join an existing one.
+                    <p className="text-zinc-500 text-lg max-w-xl mx-auto font-medium">
+                        Choose how you'd like to start your journey. Create a team from scratch or join an existing one.
                     </p>
                 </div>
 

@@ -28,7 +28,7 @@ export async function createUser(formData: FormData) {
             data: {
                 email,
                 name: name || "Test User",
-                password: "hashed_password_placeholder", // Dummy password for tester
+                password: null,
             },
         });
         revalidatePath("/db-test");
