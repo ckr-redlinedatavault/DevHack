@@ -143,3 +143,39 @@ enum ProblemStatus {
   IN_PROGRESS
   RESOLVED
 }
+
+model Organizer {
+  id        String           @id @default(cuid())
+  email     String           @unique
+  password  String
+  name      String
+  createdAt DateTime         @default(now())
+  events    HackathonEvent[]
+}
+
+model HackathonEvent {
+  id            String              @id @default(cuid())
+  organizerId   String
+  organizer     Organizer           @relation(fields: [organizerId], references: [id])
+  name          String
+  description   String
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime            @default(now())
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id        String             @id @default(cuid())
+  eventId   String
+  event     HackathonEvent     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  teamName  String
+  leadEmail String
+  status    RegistrationStatus @default(PENDING)
+  createdAt DateTime           @default(now())
+}
+
+enum RegistrationStatus {
+  PENDING
+  INVITED
+}
