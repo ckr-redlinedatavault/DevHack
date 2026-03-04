@@ -1941,25 +1941,22 @@ function LLMModule() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-3xl font-semibold text-white tracking-tight">LLM Intelligence</h2>
-                    <p className="text-zinc-500 text-sm mt-1 uppercase tracking-widest font-medium">AI-powered workspace co-pilot.</p>
+                    <p className="text-zinc-500 text-sm mt-1 uppercase tracking-widest font-medium">Deep-Analysis Workspace Co-Pilot.</p>
                 </div>
-                <div className="px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center gap-2">
-                    <Sparkles className="w-3 h-3 text-rose-400" />
-                    <span className="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Gemini 1.5 Pro</span>
+                <div className="px-4 py-2 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center gap-2">
+                    <Sparkles className="w-3 h-3 text-violet-400" />
+                    <span className="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Gemini Experimental</span>
                 </div>
             </div>
 
             <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col relative overflow-hidden">
                 <div className="flex-1 overflow-y-auto space-y-6 mb-4 scrollbar-hide pr-2">
                     {messages.length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center text-center space-y-6 max-w-lg mx-auto">
-                            <div className="w-20 h-20 rounded-[2.5rem] bg-black border border-white/5 flex items-center justify-center shadow-2xl shadow-rose-500/10 mb-2">
-                                <Bot className="w-10 h-10 text-white" />
-                            </div>
-                            <div className="space-y-2">
-                                <h3 className="text-2xl font-semibold text-white">How can I assist your team today?</h3>
-                                <p className="text-zinc-500 text-sm leading-relaxed">
-                                    I can help you debug code, draft documentation, or research problem statements directly from your workspace.
+                        <div className="h-full flex flex-col items-center justify-center text-center space-y-8 max-w-lg mx-auto">
+                            <div className="space-y-4">
+                                <h3 className="text-3xl font-semibold text-white tracking-tight">How can I assist your team today?</h3>
+                                <p className="text-zinc-500 text-sm leading-relaxed max-w-sm mx-auto">
+                                    I have been trained with high-detail extraction models to provide deep project context and technical precision.
                                 </p>
                             </div>
 
@@ -1969,9 +1966,6 @@ function LLMModule() {
                                         key={i}
                                         onClick={() => {
                                             setInput(p);
-                                            // Trigger send after tiny delay to ensure state update if needed, or better just use p directly
-                                            const mockEvent = { preventDefault: () => { } } as React.FormEvent;
-                                            // This is a bit hacky, but consistent with simple react state
                                             fetch("/api/chat", {
                                                 method: "POST",
                                                 headers: { "Content-Type": "application/json" },
@@ -1980,7 +1974,7 @@ function LLMModule() {
                                                 setMessages(prev => [...prev, { role: 'user', content: p }, { role: 'assistant', content: data.text }]);
                                             });
                                         }}
-                                        className="p-4 rounded-2xl bg-black/40 border border-[#27272a] hover:border-white/10 text-zinc-400 text-xs font-medium hover:text-white transition-all text-left"
+                                        className="p-4 rounded-2xl bg-black/40 border border-[#27272a] hover:border-violet-500/30 text-zinc-400 text-xs font-medium hover:text-white transition-all text-left"
                                     >
                                         {p}
                                     </button>
@@ -1991,7 +1985,7 @@ function LLMModule() {
                         messages.map((m, i) => (
                             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user'
-                                    ? 'bg-rose-600 text-white rounded-tr-none'
+                                    ? 'bg-violet-600 text-white rounded-tr-none shadow-[0_0_20px_rgba(139,92,246,0.3)]'
                                     : 'bg-black/40 border border-[#27272a] text-zinc-300 rounded-tl-none'
                                     }`}>
                                     <div className="prose prose-invert prose-sm max-w-none">
@@ -2006,7 +2000,7 @@ function LLMModule() {
                     {isLoading && (
                         <div className="flex justify-start">
                             <div className="bg-black/40 border border-[#27272a] p-4 rounded-2xl rounded-tl-none">
-                                <Loader2 className="w-4 h-4 text-rose-400 animate-spin" />
+                                <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
                             </div>
                         </div>
                     )}
@@ -2016,8 +2010,8 @@ function LLMModule() {
                     <input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        className="w-full bg-black border border-[#27272a] focus:border-white/20 rounded-2xl h-16 px-8 text-sm outline-none transition-all placeholder:text-zinc-700"
-                        placeholder="Message AI Assistant..."
+                        className="w-full bg-black border border-[#27272a] focus:border-violet-500/30 rounded-2xl h-16 px-8 text-sm outline-none transition-all placeholder:text-zinc-700"
+                        placeholder="Message Deep-Extraction AI..."
                         disabled={isLoading}
                     />
                     <button
@@ -2029,7 +2023,7 @@ function LLMModule() {
                     </button>
                 </form>
 
-                <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500/5 blur-[120px] -z-0" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500/5 blur-[120px] -z-0" />
             </div>
         </div>
     );
