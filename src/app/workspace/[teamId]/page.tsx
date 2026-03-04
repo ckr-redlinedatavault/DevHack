@@ -46,6 +46,7 @@ const MODULES = [
     { id: "notes", label: "Notes", icon: <FileText className="w-4 h-4" /> },
     { id: "submission", label: "Submission", icon: <Globe className="w-4 h-4" /> },
     { id: "members", label: "Members", icon: <Users className="w-4 h-4" /> },
+    { id: "problem-statements", label: "Problem Statements", icon: <ClipboardList className="w-4 h-4" /> },
 ];
 
 export default function WorkspacePage({ params: paramsPromise }: { params: Promise<{ teamId: string }> }) {
@@ -203,7 +204,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                     {activeModule === "notes" && <NotesModule teamId={teamId} initialNotes={team.notes || []} />}
                     {activeModule === "submission" && <SubmissionModule teamId={teamId} initialSubmission={team.submission} />}
                     {activeModule === "members" && <MembersModule team={team} copyInvite={copyInvite} copied={copied} />}
-
+                    {activeModule === "problem-statements" && <ProblemStatementsModule teamId={teamId} initialProblems={team.problemStatements || []} />}
                 </div>
             </main>
         </div>
@@ -690,6 +691,152 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
                     </div>
                     <p className="text-zinc-400 font-medium text-sm">No notes saved yet.</p>
                     <p className="text-zinc-600 text-xs mt-1">Write your first note in the editor above.</p>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, initialProblems: any[] }) {
+    const [problems, setProblems] = useState(initialProblems);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
+
+    const handleSave = async () => {
+        if (!title.trim() || !description.trim()) return;
+        setIsSaving(true);
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/problem-statements`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, description })
+            });
+            if (res.ok) {
+                const newProblem = await res.json();
+                setProblems([newProblem, ...problems]);
+                setTitle("");
+                setDescription("");
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const deleteProblem = async (id: string) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/problem-statements`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) {
+                setProblems(prev => prev.filter(p => p.id !== id));
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const updateStatus = async (id: string, status: string) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/problem-statements`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status })
+            });
+            if (res.ok) {
+                const updated = await res.json();
+                setProblems(prev => prev.map(p => p.id === id ? updated : p));
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-bold">Problem Statements</h2>
+                    <p className="text-zinc-500 text-sm mt-1">Define the core challenges you're tackling in this project.</p>
+                </div>
+            </div>
+
+            {/* Quick Add Form */}
+            <div className="bg-[#121214] border border-[#27272a] focus-within:border-[#3f3f46] transition-colors rounded-2xl overflow-hidden flex flex-col shadow-sm">
+                <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="text-lg font-bold bg-transparent border-none focus:ring-0 focus:outline-none w-full text-zinc-100 placeholder:text-zinc-600 px-6 py-5"
+                    placeholder="Problem Title (e.g., Fragmented Data Access)"
+                />
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-zinc-300 leading-relaxed text-sm px-6 pb-4 min-h-[120px] custom-scrollbar"
+                    placeholder="Describe the challenge in detail..."
+                />
+                <div className="flex justify-between items-center px-6 py-4 border-t border-[#27272a] bg-[#18181b]/30 backdrop-blur-sm">
+                    <p className="text-xs text-zinc-500 font-mono hidden sm:block">🎯 Clear definitions lead to better solutions.</p>
+                    <Button
+                        onClick={handleSave}
+                        disabled={isSaving || !title.trim() || !description.trim()}
+                        className="bg-white text-black hover:bg-zinc-200 rounded-lg h-9 px-6 font-medium transition-all shadow-none flex items-center gap-2 ml-auto"
+                    >
+                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Add Problem
+                    </Button>
+                </div>
+            </div>
+
+            {/* Problems Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {problems?.map((problem) => (
+                    <div key={problem.id} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] rounded-xl flex flex-col group transition-all relative p-6 space-y-4">
+                        <div className="flex items-start justify-between">
+                            <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md ${problem.status === "OPEN" ? "bg-rose-500/10 text-rose-500 border border-rose-500/20" :
+                                    problem.status === "IN_PROGRESS" ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
+                                        "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                                }`}>
+                                {problem.status.replace('_', ' ')}
+                            </span>
+                            <button
+                                onClick={() => deleteProblem(problem.id)}
+                                className="w-8 h-8 rounded-lg bg-[#27272a] border border-[#3f3f46] flex items-center justify-center text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/20 opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h3 className="font-bold text-zinc-100 truncate pr-4">{problem.title}</h3>
+                            <p className="text-zinc-400 text-sm leading-relaxed line-clamp-3">
+                                {problem.description}
+                            </p>
+                        </div>
+
+                        <div className="pt-4 flex items-center gap-2">
+                            <select
+                                value={problem.status}
+                                onChange={(e) => updateStatus(problem.id, e.target.value)}
+                                className="bg-[#121214] border border-[#27272a] text-zinc-400 text-[10px] font-bold uppercase tracking-wider rounded-lg px-2 py-1 focus:outline-none focus:border-[#3f3f46]"
+                            >
+                                <option value="OPEN">Open</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="RESOLVED">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {(!problems || problems.length === 0) && (
+                <div className="py-20 flex flex-col items-center justify-center border border-dashed border-[#27272a] bg-[#121214] rounded-2xl">
+                    <div className="w-12 h-12 bg-[#18181b] border border-[#27272a] rounded-xl flex items-center justify-center mb-4">
+                        <ClipboardList className="w-5 h-5 text-zinc-600" />
+                    </div>
+                    <p className="text-zinc-400 font-medium text-sm">No problem statements defined.</p>
+                    <p className="text-zinc-600 text-xs mt-1">Start by adding your first challenge above.</p>
                 </div>
             )}
         </div>

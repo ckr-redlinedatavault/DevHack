@@ -42,6 +42,7 @@ export async function GET(
                 resources: true,
                 notes: true,
                 submission: true,
+                problemStatements: true,
                 joinRequests: {
                     where: { status: "PENDING" },
                     include: {
