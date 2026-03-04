@@ -24,27 +24,30 @@ DevHack is a unified collaborative workspace designed specifically for hackathon
 
 ## Technical Stack
 
-### Frontend Architecture
-- Framework: Next.js 16 (App Router)
-- Language: TypeScript
-- Library: React 19
-- Styling: Tailwind CSS 4
-- State Management: Zustand
-- Markdown Support: React Markdown with Rehype Highlight
-- Icons: Lucide React
+| Category | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 16 (App Router) |
+| **Language** | TypeScript |
+| **Library** | React 19 |
+| **Styling** | Tailwind CSS 4 |
+| **State Management** | Zustand |
+| **Markdown** | React Markdown / Rehype Highlight |
 
-### Backend and Database
-- Runtime: Node.js
-- ORM: Prisma
-- Database: PostgreSQL (with pg adapter)
-- Authentication: NextAuth.js
-- Email Service: Resend
-- API Communication: Axios
+| Infrastructure | Tool |
+| :--- | :--- |
+| **Runtime** | Node.js |
+| **ORM** | Prisma |
+| **Database** | PostgreSQL |
+| **Auth** | NextAuth.js |
+| **Email** | Resend |
+| **API** | Axios |
 
-### Development Tools
-- Package Manager: npm
-- Linting: ESLint
-- Styling Utilities: clsx, tailwind-merge
+| Development | Utility |
+| :--- | :--- |
+| **Package Manager** | npm |
+| **Linting** | ESLint |
+| **Styling Utils** | clsx / tailwind-merge |
+| **Icons** | Lucide React |
 
 ## Key Modules
 
