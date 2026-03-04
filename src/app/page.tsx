@@ -48,14 +48,6 @@ export default function LandingPage() {
       <main className="flex-1 relative flex flex-col justify-center px-6 md:px-12 w-full max-w-[90rem] mx-auto z-10">
         <div className="space-y-8 w-full max-w-3xl">
 
-          {/* Status Badge */}
-          <div className="inline-flex items-center gap-2 py-1.5 px-3 rounded-full border border-zinc-800 bg-zinc-900/50">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#4f46e5] animate-pulse" />
-            <span className="text-zinc-400 text-[10px] md:text-xs tracking-[0.2em] font-medium uppercase">
-              System Active
-            </span>
-          </div>
-
           {/* Hero Typography - Pure Solid Colors */}
           <div className="space-y-5">
             <h1 className="text-[3.5rem] md:text-[5.5rem] lg:text-[6.5rem] font-light tracking-tighter leading-[0.95] text-white">
