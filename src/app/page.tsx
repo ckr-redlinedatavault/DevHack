@@ -9,8 +9,8 @@ export default function LandingPage() {
     <div className="h-[100dvh] w-full bg-[#050505] text-zinc-300 selection:bg-[#4f46e5]/30 font-sans font-light overflow-hidden flex flex-col">
 
       {/* 1. Tester Instance Banner */}
-      <div className="flex-none w-full bg-[#4f46e5]/10 border-b border-[#4f46e5]/20 py-2.5 px-4 text-center z-50">
-        <p className="text-[11px] text-[#4f46e5] font-medium tracking-wide">
+      <div className="flex-none w-full bg-[#4f46e5] py-4 px-4 text-center z-50">
+        <p className="text-xs text-white font-medium tracking-wide">
           Hello folks, this system is set for the Tester Instance. Please use the system and give your valuable feedback.
         </p>
       </div>
