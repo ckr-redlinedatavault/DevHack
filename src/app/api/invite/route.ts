@@ -45,7 +45,11 @@ export async function POST(req: Request) {
         );
 
         if (!result?.success) {
-            return NextResponse.json({ message: "Failed to send email" }, { status: 500 });
+            console.error("Resend error details:", JSON.stringify(result?.error, null, 2));
+            return NextResponse.json({
+                message: "Failed to send email",
+                error: (result?.error as any)?.message || "Unknown Resend error"
+            }, { status: 500 });
         }
 
         return NextResponse.json({ message: "Invite sent successfully!" });

@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getUserId } from "@/lib/auth-utils";
 
 export async function POST(
     req: Request,
     { params }: { params: Promise<{ requestId: string }> }
 ) {
     try {
+        const actingUserId = await getUserId();
+        if (!actingUserId) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
         const { requestId } = await params;
-        const { action } = await req.json(); // "APPROVE" or "REJECT"
+        const { action } = await req.json();
 
         const joinRequest = await prisma.joinRequest.findUnique({
             where: { id: requestId },

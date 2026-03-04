@@ -39,11 +39,14 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
             const res = await fetch(`/api/join/${inviteCode}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: "temp-user-id" }) // Replace with session userId
+                body: JSON.stringify({})
             });
 
             if (res.ok) {
                 setStatus("requested");
+            } else {
+                const data = await res.json();
+                console.error("Join request failed:", data.message);
             }
         } catch (err) {
             console.error(err);
@@ -51,6 +54,7 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
             setIsSubmitting(false);
         }
     };
+
 
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 selection:bg-indigo-500/30 font-sans">

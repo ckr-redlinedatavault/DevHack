@@ -60,9 +60,12 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                 if (res.ok) {
                     const data = await res.json();
                     setTeam(data);
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    console.error("Team fetch failed:", res.status, err.message);
                 }
             } catch (err) {
-                console.error("Failed to fetch team data");
+                console.error("Failed to fetch team data:", err);
             } finally {
                 setIsLoading(false);
             }
@@ -88,12 +91,33 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
 
     if (!team) {
         return (
-            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white space-y-4">
-                <h2 className="text-2xl font-bold">Team not found</h2>
-                <Button onClick={() => window.location.href = '/dashboard'}>Go to Dashboard</Button>
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white space-y-6">
+                <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-rose-400 text-2xl">✕</span>
+                </div>
+                <div className="text-center space-y-2">
+                    <h2 className="text-2xl font-bold">Team not found</h2>
+                    <p className="text-zinc-500 text-sm">This team doesn't exist or you are not a member.</p>
+                </div>
+                <div className="flex gap-3">
+                    <Button
+                        variant="outline"
+                        className="border-zinc-800 rounded-xl"
+                        onClick={() => window.location.reload()}
+                    >
+                        Retry
+                    </Button>
+                    <Button
+                        className="bg-indigo-600 hover:bg-indigo-500 rounded-xl"
+                        onClick={() => window.location.href = '/dashboard'}
+                    >
+                        Go to Dashboard
+                    </Button>
+                </div>
             </div>
         );
     }
+
 
     return (
         <div className="min-h-screen bg-[#09090b] text-white flex selection:bg-indigo-500/30">
@@ -398,29 +422,35 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
     const [inviteEmail, setInviteEmail] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [sendStatus, setSendStatus] = useState<"idle" | "success" | "error">("idle");
+    const [sendError, setSendError] = useState("");
 
     const handleEmailInvite = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inviteEmail.trim()) return;
         setIsSending(true);
         setSendStatus("idle");
+        setSendError("");
         try {
             const res = await fetch("/api/invite", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: inviteEmail, teamId: team.id })
             });
+            const data = await res.json();
+            console.log("Invite API response:", res.status, data);
             if (res.ok) {
                 setSendStatus("success");
                 setInviteEmail("");
             } else {
                 setSendStatus("error");
+                setSendError(data?.error || data?.message || "Unknown error");
             }
-        } catch {
+        } catch (err: any) {
             setSendStatus("error");
+            setSendError(err.message || "Network error");
         } finally {
             setIsSending(false);
-            setTimeout(() => setSendStatus("idle"), 4000);
+            setTimeout(() => setSendStatus("idle"), 8000);
         }
     };
 
@@ -542,10 +572,14 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
                     </div>
                 )}
                 {sendStatus === "error" && (
-                    <p className="text-rose-400 text-sm animate-in fade-in duration-300">
-                        Failed to send invite. Check your Resend API key in .env.
-                    </p>
+                    <div className="space-y-1 animate-in fade-in duration-300">
+                        <p className="text-rose-400 text-sm font-semibold">Failed to send invite.</p>
+                        {sendError && (
+                            <p className="text-zinc-500 text-xs font-mono bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2">{sendError}</p>
+                        )}
+                    </div>
                 )}
+
             </div>
 
 
