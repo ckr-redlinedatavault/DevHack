@@ -3,11 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, ArrowRight, ShieldCheck, Mail, Lock, User } from "lucide-react";
+import { Loader2, Mail, Lock, User, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
@@ -50,96 +48,98 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#09090b] flex items-center justify-center p-6 selection:bg-indigo-500/30 relative overflow-hidden">
+        <div className="min-h-screen bg-black flex items-center justify-center p-6 selection:bg-rose-500/30 relative overflow-hidden">
             {/* Logo at top left */}
-            <div className="absolute top-8 left-8 z-50">
-                <Link href="/" className="transition-transform hover:scale-105 duration-300">
-                    <img
-                        src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
-                        alt="DevHack Logo"
-                        className="h-16 w-auto object-contain"
-                    />
+            <div className="absolute top-10 left-10 z-50">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="w-10 h-10 bg-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20 group-hover:scale-105 transition-all">
+                        <Zap className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-white font-bold text-xl tracking-tighter">DevHack</span>
                 </Link>
             </div>
 
             {/* Ambient Background */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[600px] bg-indigo-600/5 blur-[120px] rounded-full -z-10" />
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-rose-500/5 blur-[120px] rounded-full -z-10 animate-pulse-slow" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/[0.01] blur-[150px] rounded-full -z-10" />
 
-            <div className="w-full max-w-[400px] space-y-10 relative">
-                {/* Branding */}
-                <div className="flex flex-col items-center space-y-6">
+            <div className="w-full max-w-[400px] space-y-12 relative">
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="inline-flex py-1 px-3 rounded-full bg-rose-500/5 border border-rose-500/20 text-rose-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                        New Operative
+                    </div>
                     <div className="text-center space-y-2">
-                        <h1 className="text-3xl font-bold tracking-tight text-white">Create Account</h1>
-                        <p className="text-zinc-500 text-sm">Join the next generation of innovators</p>
+                        <h1 className="text-4xl font-black tracking-tight text-white leading-tight">Join the Network.</h1>
+                        <p className="text-zinc-500 text-sm font-medium italic opacity-70">Enlist for the next generation of building.</p>
                     </div>
                 </div>
 
-                <div className="bg-[#121214] border border-white/5 rounded-[2rem] p-8 shadow-2xl shadow-black/50">
+                <div className="bg-zinc-950/40 border border-white/5 rounded-[2.5rem] p-10 shadow-2xl backdrop-blur-sm">
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-5">
+                        <div className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-zinc-400 ml-1">Full Name</label>
+                                <label className="text-[10px] font-black text-zinc-600 ml-1 uppercase tracking-widest leading-none">Full Name</label>
                                 <div className="relative group">
-                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
+                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-700 group-focus-within:text-rose-500 transition-colors" />
                                     <Input
                                         name="name"
-                                        placeholder="John Doe"
+                                        placeholder="Agent 001"
                                         required
-                                        className="h-12 bg-black border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-700 text-sm"
+                                        className="h-12 bg-black border-white/5 focus:border-rose-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-800 text-sm font-medium"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-zinc-400 ml-1">Email Address</label>
+                                <label className="text-[10px] font-black text-zinc-600 ml-1 uppercase tracking-widest leading-none">Email Address</label>
                                 <div className="relative group">
-                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-700 group-focus-within:text-rose-500 transition-colors" />
                                     <Input
                                         name="email"
                                         type="email"
-                                        placeholder="name@example.com"
+                                        placeholder="operative@devhack.com"
                                         required
-                                        className="h-12 bg-black border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-700 text-sm"
+                                        className="h-12 bg-black border-white/5 focus:border-rose-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-800 text-sm font-medium"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-zinc-400 ml-1">Password</label>
+                                <label className="text-[10px] font-black text-zinc-600 ml-1 uppercase tracking-widest leading-none">Security Key</label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-700 group-focus-within:text-rose-500 transition-colors" />
                                     <Input
                                         name="password"
                                         type="password"
                                         placeholder="••••••••"
                                         required
-                                        className="h-12 bg-black border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-700 text-sm"
+                                        className="h-12 bg-black border-white/5 focus:border-rose-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-800 text-sm font-medium"
                                     />
                                 </div>
                             </div>
                         </div>
 
                         {error && (
-                            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 text-rose-400 text-sm font-medium text-center">
+                            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/20 text-rose-500 text-[10px] font-black uppercase tracking-widest text-center">
                                 {error}
                             </div>
                         )}
 
-                        <div className="space-y-4 pt-2">
+                        <div className="space-y-6 pt-2">
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full h-12 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold text-sm transition-all shadow-lg shadow-white/5 disabled:opacity-50"
+                                className="w-full h-12 bg-white text-black hover:bg-rose-500 hover:text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl disabled:opacity-50"
                             >
-                                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
+                                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Deploy Profile"}
                             </Button>
 
                             <div className="relative py-2">
                                 <div className="absolute inset-0 flex items-center">
                                     <div className="w-full border-t border-white/5"></div>
                                 </div>
-                                <div className="relative flex justify-center text-xs font-medium">
-                                    <span className="bg-[#121214] px-4 text-zinc-600 leading-none">Or continue with</span>
+                                <div className="relative flex justify-center">
+                                    <span className="bg-[#0c0c0e] px-4 text-[10px] font-black text-zinc-800 uppercase tracking-widest">Alt Relay</span>
                                 </div>
                             </div>
 
@@ -147,42 +147,41 @@ export default function RegisterPage() {
                                 type="button"
                                 variant="outline"
                                 onClick={handleGoogleSignIn}
-                                className="w-full h-11 bg-white hover:bg-zinc-200 text-black border-none rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-3 shadow-lg shadow-white/5"
+                                className="w-full h-12 bg-black hover:bg-white hover:text-black text-zinc-400 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
                             >
                                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                                     <path
-                                        fill="#4285F4"
+                                        fill="currentColor"
                                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                                     />
                                     <path
-                                        fill="#34A853"
+                                        fill="currentColor"
                                         d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
                                     />
                                     <path
-                                        fill="#FBBC05"
+                                        fill="currentColor"
                                         d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"
                                     />
                                     <path
-                                        fill="#EA4335"
+                                        fill="currentColor"
                                         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                                     />
                                 </svg>
-                                Sign up with Google
+                                Google Auth
                             </Button>
 
-                            <div className="text-center">
-                                <p className="text-sm text-zinc-500">
-                                    Already have an account?{" "}
-                                    <Link href="/login" className="text-white hover:text-indigo-400 font-medium transition-colors">Log in</Link>
+                            <div className="text-center pt-2">
+                                <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">
+                                    Already enlisted?{" "}
+                                    <Link href="/login" className="text-white hover:text-rose-500 transition-colors">Authorize Access</Link>
                                 </p>
                             </div>
                         </div>
                     </form>
                 </div>
 
-                {/* Footer Subtle Text */}
-                <p className="text-center text-[10px] text-zinc-700 font-medium">
-                    Secure Cloud Infrastructure by DevHack
+                <p className="text-center text-[10px] text-zinc-800 font-black uppercase tracking-[0.4em] opacity-40">
+                    Infrastructure Guard v4.1
                 </p>
             </div>
         </div>
