@@ -22,6 +22,13 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
                 if (res.ok) {
                     const data = await res.json();
                     setTeamInfo(data);
+
+                    // If user is already a member, redirect to workspace immediately
+                    if (data.alreadyMember) {
+                        router.push(`/workspace/${data.id}`);
+                        return;
+                    }
+
                     setStatus("success");
                 } else {
                     setStatus("error");
@@ -31,7 +38,8 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
             }
         };
         checkInvite();
-    }, [inviteCode]);
+    }, [inviteCode, router]);
+
 
     const handleJoinRequest = async () => {
         setIsSubmitting(true);
@@ -42,10 +50,17 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
                 body: JSON.stringify({})
             });
 
+            const data = await res.json();
+
             if (res.ok) {
                 setStatus("requested");
+            } else if (res.status === 400 && data.message === "You are already a member of this team") {
+                // Already a member → go directly to workspace
+                router.push(`/workspace/${teamInfo?.id}`);
+            } else if (res.status === 400 && data.message?.includes("pending request")) {
+                // Already requested → show pending state
+                setStatus("requested");
             } else {
-                const data = await res.json();
                 console.error("Join request failed:", data.message);
             }
         } catch (err) {

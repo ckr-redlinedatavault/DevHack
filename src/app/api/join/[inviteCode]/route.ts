@@ -8,12 +8,18 @@ export async function GET(
 ) {
     try {
         const { inviteCode } = await params;
+        const userId = await getUserId();
+
         const team = await prisma.team.findUnique({
             where: { inviteCode },
             select: {
                 id: true,
                 name: true,
                 projectName: true,
+                members: userId ? {
+                    where: { userId },
+                    select: { id: true }
+                } : false
             }
         });
 
@@ -24,7 +30,14 @@ export async function GET(
             );
         }
 
-        return NextResponse.json(team);
+        const alreadyMember = (team.members as any[])?.length > 0;
+
+        return NextResponse.json({
+            id: team.id,
+            name: team.name,
+            projectName: team.projectName,
+            alreadyMember
+        });
     } catch (error: any) {
         console.error("Join discovery error:", error);
         return NextResponse.json(
@@ -33,6 +46,7 @@ export async function GET(
         );
     }
 }
+
 
 export async function POST(
     req: Request,
