@@ -6,11 +6,11 @@ import Image from "next/image";
 
 export default function LandingPage() {
   return (
-    <div className="h-[100dvh] w-full bg-[#050505] text-zinc-300 selection:bg-blue-500/30 font-sans font-light overflow-hidden flex flex-col">
+    <div className="h-[100dvh] w-full bg-[#050505] text-zinc-300 selection:bg-[#4f46e5]/30 font-sans font-light overflow-hidden flex flex-col">
 
       {/* 1. Tester Instance Banner */}
-      <div className="flex-none w-full bg-blue-500/10 border-b border-blue-500/20 py-2.5 px-4 text-center z-50">
-        <p className="text-[11px] text-blue-200/90 font-medium tracking-wide">
+      <div className="flex-none w-full bg-[#4f46e5]/10 border-b border-[#4f46e5]/20 py-2.5 px-4 text-center z-50">
+        <p className="text-[11px] text-[#4f46e5] font-medium tracking-wide">
           Hello folks, this system is set for the Tester Instance. Please use the system and give your valuable feedback.
         </p>
       </div>
@@ -50,7 +50,7 @@ export default function LandingPage() {
 
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 py-1.5 px-3 rounded-full border border-zinc-800 bg-zinc-900/50">
-            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#4f46e5] animate-pulse" />
             <span className="text-zinc-400 text-[10px] md:text-xs tracking-[0.2em] font-medium uppercase">
               System Active
             </span>
@@ -82,7 +82,7 @@ export default function LandingPage() {
               href="/organizer/login"
               className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-zinc-800 text-zinc-400 font-medium text-xs md:text-sm rounded-full hover:bg-zinc-900 hover:text-white transition-colors duration-300 flex items-center justify-center gap-3 group"
             >
-              <Zap className="w-4 h-4 text-zinc-500 group-hover:text-blue-400 transition-colors duration-300" />
+              <Zap className="w-4 h-4 text-zinc-500 group-hover:text-[#4f46e5] transition-colors duration-300" />
               Organizer Panel
             </Link>
           </div>
@@ -91,7 +91,7 @@ export default function LandingPage() {
           <div className="pt-10 md:pt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 opacity-70 hover:opacity-100 transition-opacity duration-500">
             {/* Feature 1 */}
             <div className="flex items-start gap-3 group">
-              <Activity className="w-4 h-4 text-zinc-600 group-hover:text-blue-400 mt-0.5 transition-colors" />
+              <Activity className="w-4 h-4 text-zinc-600 group-hover:text-[#4f46e5] mt-0.5 transition-colors" />
               <div className="space-y-0.5 text-left">
                 <h3 className="text-xs font-medium text-zinc-300 tracking-wide">Live Sync</h3>
                 <p className="text-[11px] text-zinc-600 font-light">0ms latency relay</p>
@@ -99,7 +99,7 @@ export default function LandingPage() {
             </div>
             {/* Feature 2 */}
             <div className="flex items-start gap-3 group">
-              <ShieldAlert className="w-4 h-4 text-zinc-600 group-hover:text-blue-400 mt-0.5 transition-colors" />
+              <ShieldAlert className="w-4 h-4 text-zinc-600 group-hover:text-[#4f46e5] mt-0.5 transition-colors" />
               <div className="space-y-0.5 text-left">
                 <h3 className="text-xs font-medium text-zinc-300 tracking-wide">Vaulted Docs</h3>
                 <p className="text-[11px] text-zinc-600 font-light">Encrypted workspace</p>
@@ -107,7 +107,7 @@ export default function LandingPage() {
             </div>
             {/* Feature 3 */}
             <div className="flex items-start gap-3 group">
-              <Code2 className="w-4 h-4 text-zinc-600 group-hover:text-blue-400 mt-0.5 transition-colors" />
+              <Code2 className="w-4 h-4 text-zinc-600 group-hover:text-[#4f46e5] mt-0.5 transition-colors" />
               <div className="space-y-0.5 text-left">
                 <h3 className="text-xs font-medium text-zinc-300 tracking-wide">Telemetry</h3>
                 <p className="text-[11px] text-zinc-600 font-light">Live rank sync</p>
