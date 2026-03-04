@@ -51,16 +51,16 @@
 
 ## Key Modules
 
-### 🚀 Agentic Problem Discovery
+### Agentic Problem Discovery
 Search and curate global problem statements from major events (SIH 2025, etc.) using automated scraping and AI categorization.
 
-### 🛡️ Secure Workspace Hub
+### Secure Workspace Hub
 High-density project management with invite-only access, team statistics, and centralized resource management.
 
-### 📋 Rapid-Iterate Kanban
+### Rapid-Iterate Kanban
 A specialized task board designed for 24-48 hour sprints, featuring real-time status syncing and priority management.
 
-### 📚 Polyglot Resource Library
+### Polyglot Resource Library
 Exhaustive documentation and boilerplate hub for over **75+ technology stacks**, helping teams ship faster without leaving the environment.
 
 ## Setup
@@ -104,5 +104,5 @@ npm run dev
 
 ---
 <p align="center">
-  Built with ❤️ by the DevHack Team
+  Built with passion by the DevHack Team
 </p>
