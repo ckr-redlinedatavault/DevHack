@@ -482,49 +482,62 @@ function ResourcesModule({ teamId, initialResources }: { teamId: string, initial
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-                <h2 className="text-2xl font-bold">Team Resources</h2>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+                <div>
+                    <h2 className="text-2xl font-bold">Team Resources</h2>
+                    <p className="text-zinc-500 text-sm mt-1">Important links, repos, and design files.</p>
+                </div>
                 <form onSubmit={addResource} className="flex flex-col sm:flex-row gap-2 w-full max-w-lg">
                     <Input
-                        placeholder="Link Title (e.g., Figma)"
+                        placeholder="Title (e.g., GitHub)"
                         value={newTitle}
                         onChange={e => setNewTitle(e.target.value)}
-                        className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl"
+                        className="bg-[#18181b] border-zinc-800 focus:border-zinc-700 focus:ring-1 focus:ring-zinc-700 rounded-lg text-sm h-10 transition-all placeholder:text-zinc-600"
                     />
                     <Input
-                        placeholder="URL (https://...)"
+                        placeholder="https://..."
                         value={newUrl}
                         onChange={e => setNewUrl(e.target.value)}
-                        className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl"
+                        className="bg-[#18181b] border-zinc-800 focus:border-zinc-700 focus:ring-1 focus:ring-zinc-700 rounded-lg text-sm h-10 transition-all placeholder:text-zinc-600"
                     />
-                    <Button disabled={isAdding || !newTitle || !newUrl} type="submit" className="bg-indigo-600 hover:bg-indigo-500 rounded-xl whitespace-nowrap px-6">
-                        {isAdding ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add"}
+                    <Button disabled={isAdding || !newTitle || !newUrl} type="submit" className="bg-white text-black hover:bg-zinc-200 rounded-lg whitespace-nowrap px-6 h-10 font-medium transition-all shadow-none">
+                        {isAdding ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add Link"}
                     </Button>
                 </form>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {resources?.map((res) => (
-                    <Card key={res.id} className="bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/60 transition-all group overflow-hidden">
-                        <CardContent className="p-6 flex items-center justify-between">
-                            <div className="flex items-center gap-4 overflow-hidden">
-                                <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center shrink-0 group-hover:bg-indigo-600/20 group-hover:text-indigo-400 transition-all">
-                                    <LinkIcon className="w-4 h-4" />
-                                </div>
-                                <div className="overflow-hidden">
-                                    <p className="font-bold text-zinc-200 truncate">{res.title}</p>
-                                    <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-400 hover:underline font-mono mt-0.5 truncate block">{res.url}</a>
-                                </div>
+                    <div key={res.id} className="bg-[#121214] border border-[#27272a] hover:border-[#3f3f46] rounded-xl transition-all group overflow-hidden flex items-center justify-between p-4">
+                        <div className="flex items-center gap-4 overflow-hidden">
+                            <div className="w-10 h-10 shrink-0 rounded-lg bg-[#18181b] border border-[#27272a] flex items-center justify-center group-hover:bg-[#27272a] transition-all">
+                                <LinkIcon className="w-4 h-4 text-zinc-400 group-hover:text-zinc-200 transition-colors" />
                             </div>
-                            <button onClick={() => deleteResource(res.id)} className="text-zinc-600 hover:text-rose-500 transition-colors shrink-0 ml-4">
+                            <div className="overflow-hidden">
+                                <p className="font-semibold text-zinc-200 text-sm truncate">{res.title}</p>
+                                <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-zinc-300 font-mono mt-0.5 truncate block transition-colors">
+                                    {res.url.replace(/^https?:\/\//, '')}
+                                </a>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 pl-4">
+                            <a href={res.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-[#18181b] hover:text-white transition-all opacity-0 group-hover:opacity-100">
+                                <ExternalLink className="w-4 h-4" />
+                            </a>
+                            <button onClick={() => deleteResource(res.id)} className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-rose-500/10 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100">
                                 <Trash2 className="w-4 h-4" />
                             </button>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 ))}
+
                 {(!resources || resources.length === 0) && (
-                    <div className="col-span-full py-20 text-center border-2 border-dashed border-zinc-800 rounded-3xl">
-                        <p className="text-zinc-500 font-medium">No resources added yet.</p>
+                    <div className="col-span-full py-20 flex flex-col items-center justify-center border border-dashed border-[#27272a] bg-[#121214] rounded-2xl">
+                        <div className="w-12 h-12 bg-[#18181b] border border-[#27272a] rounded-xl flex items-center justify-center mb-4">
+                            <LinkIcon className="w-5 h-5 text-zinc-600" />
+                        </div>
+                        <p className="text-zinc-400 font-medium text-sm">No resources added yet.</p>
+                        <p className="text-zinc-600 text-xs mt-1">Add your first link above.</p>
                     </div>
                 )}
             </div>
