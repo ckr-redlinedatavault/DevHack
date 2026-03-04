@@ -44,76 +44,90 @@ export default function LoginPage() {
 
 
     return (
-        <div className="min-h-screen bg-black flex items-center justify-center p-6 selection:bg-indigo-500/30">
-            <div className="absolute top-0 right-1/2 translate-x-1/2 w-[600px] h-[400px] bg-indigo-600/10 blur-[100px] rounded-full -z-10" />
+        <div className="min-h-screen bg-[#09090b] flex items-center justify-center p-6 selection:bg-indigo-500/30 relative overflow-hidden">
+            {/* Ambient Background */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[600px] bg-indigo-600/5 blur-[120px] rounded-full -z-10" />
 
-            <div className="w-full max-w-md space-y-8">
-                <div className="text-center space-y-2">
-                    <Link href="/" className="inline-flex items-center gap-2 group mb-4">
-                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white group-hover:scale-110 transition-transform">D</div>
-                        <span className="font-bold text-xl tracking-tight text-white">DevHack</span>
+            <div className="w-full max-w-[400px] space-y-10 relative">
+                {/* Branding */}
+                <div className="flex flex-col items-center space-y-6">
+                    <Link href="/" className="transition-transform hover:scale-105 duration-300">
+                        <img
+                            src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
+                            alt="DevHack Logo"
+                            className="h-24 w-auto object-contain"
+                        />
                     </Link>
-                    <h1 className="text-3xl font-bold tracking-tight text-white">Welcome back</h1>
-                    <p className="text-zinc-500">Sign in to access your workspace.</p>
+                    <div className="text-center space-y-2">
+                        <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-[0.2em]">Welcome Back</h1>
+                        <p className="text-zinc-500 text-xs font-medium uppercase tracking-widest">Access your innovation hub</p>
+                    </div>
                 </div>
 
-                <Card className="bg-zinc-900/50 border-zinc-800 backdrop-blur-xl">
-                    <form onSubmit={handleSubmit}>
-                        <CardHeader className="space-y-1">
-                            <CardTitle className="text-xl text-white">Login</CardTitle>
-                            <CardDescription className="text-zinc-500">
-                                Enter your credentials to continue
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
+                <div className="bg-[#121214] border border-white/5 rounded-[2rem] p-8 shadow-2xl shadow-black/50">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-5">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
-                                    <Mail className="w-4 h-4 text-zinc-500" /> Email
-                                </label>
-                                <Input
-                                    name="email"
-                                    type="email"
-                                    placeholder="name@example.com"
-                                    required
-                                    className="bg-black/50 border-zinc-800 focus:border-indigo-500 text-white"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
-                                        <Lock className="w-4 h-4 text-zinc-500" /> Password
-                                    </label>
-                                    <a href="#" className="text-xs text-indigo-400 hover:text-indigo-300">Forgot password?</a>
+                                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Email Address</label>
+                                <div className="relative group">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Input
+                                        name="email"
+                                        type="email"
+                                        placeholder="name@example.com"
+                                        required
+                                        className="h-12 bg-black border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-700 text-sm"
+                                    />
                                 </div>
-                                <Input
-                                    name="password"
-                                    type="password"
-                                    required
-                                    className="bg-black/50 border-zinc-800 focus:border-indigo-500 text-white"
-                                />
                             </div>
 
-                            {error && (
-                                <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">
-                                    {error}
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center ml-1">
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Password</label>
+                                    <a href="#" className="text-[10px] text-indigo-400 hover:text-indigo-300 font-bold uppercase tracking-widest">Forgot?</a>
                                 </div>
-                            )}
-                        </CardContent>
-                        <CardFooter className="flex flex-col gap-4">
+                                <div className="relative group">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Input
+                                        name="password"
+                                        type="password"
+                                        placeholder="••••••••"
+                                        required
+                                        className="h-12 bg-black border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 transition-all placeholder:text-zinc-700 text-sm"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {error && (
+                            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 text-rose-400 text-[11px] font-bold text-center uppercase tracking-wider">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="space-y-4 pt-2">
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl h-12 font-bold transition-all"
+                                className="w-full h-12 bg-white text-black hover:bg-zinc-200 rounded-xl font-black uppercase text-[11px] tracking-[0.2em] transition-all shadow-lg shadow-white/5 disabled:opacity-50"
                             >
                                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
                             </Button>
-                            <div className="text-center text-sm text-zinc-500">
-                                Don't have an account?{" "}
-                                <Link href="/register" className="text-indigo-400 hover:text-indigo-300 font-medium">Register</Link>
+
+                            <div className="text-center">
+                                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+                                    New to DevHack?{" "}
+                                    <Link href="/register" className="text-white hover:text-indigo-400 transition-colors">Create Account</Link>
+                                </p>
                             </div>
-                        </CardFooter>
+                        </div>
                     </form>
-                </Card>
+                </div>
+
+                {/* Footer Subtle Text */}
+                <p className="text-center text-[9px] text-zinc-800 font-bold uppercase tracking-[0.3em]">
+                    Secure Authentication Powered by DevHack
+                </p>
             </div>
         </div>
     );
