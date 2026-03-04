@@ -1,13 +1,5 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
-
 function generateProfessionalCode(): string {
   const prefixes = ["DEV", "TEAM", "HACK"];
   const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
@@ -36,6 +28,14 @@ export async function sendInviteEmail(
   }
 
   try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
     const mailOptions = {
       from: `"DevHack" <${fromEmail}>`,
       to: toEmail,
@@ -150,6 +150,14 @@ export async function sendPasswordResetEmail(
   }
 
   try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
     const mailOptions = {
       from: `"DevHack" <${fromEmail}>`,
       to: toEmail,
