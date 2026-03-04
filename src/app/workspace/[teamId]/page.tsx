@@ -194,10 +194,10 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                 {/* Content Modules */}
                 <div className="p-8">
                     {activeModule === "overview" && <OverviewModule team={team} setActiveModule={setActiveModule} />}
-                    {activeModule === "tasks" && <TasksModule tasks={team.tasks} />}
-                    {activeModule === "resources" && <ResourcesModule resources={team.resources} />}
-                    {activeModule === "notes" && <NotesModule notes={team.notes} />}
-                    {activeModule === "submission" && <SubmissionModule submission={team.submission} />}
+                    {activeModule === "tasks" && <TasksModule teamId={teamId} initialTasks={team.tasks || []} />}
+                    {activeModule === "resources" && <ResourcesModule teamId={teamId} initialResources={team.resources || []} />}
+                    {activeModule === "notes" && <NotesModule teamId={teamId} initialNotes={team.notes || []} />}
+                    {activeModule === "submission" && <SubmissionModule teamId={teamId} initialSubmission={team.submission} />}
                     {activeModule === "members" && <MembersModule team={team} copyInvite={copyInvite} copied={copied} />}
 
                 </div>
@@ -273,70 +273,211 @@ function OverviewModule({ team, setActiveModule }: { team: any, setActiveModule:
 }
 
 
-function TasksModule({ tasks }: { tasks: any[] }) {
+function TasksModule({ teamId, initialTasks }: { teamId: string, initialTasks: any[] }) {
     const columns = ["Backlog", "To Do", "In Progress", "Done"];
+    const [tasks, setTasks] = useState(initialTasks);
+    const [newTaskTitle, setNewTaskTitle] = useState("");
+    const [isAdding, setIsAdding] = useState(false);
+
+    const addTask = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTaskTitle.trim()) return;
+        setIsAdding(true);
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/tasks`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: newTaskTitle, status: "BACKLOG" })
+            });
+            if (res.ok) {
+                const newTask = await res.json();
+                setTasks(prev => [...prev, newTask]);
+                setNewTaskTitle("");
+            }
+        } finally {
+            setIsAdding(false);
+        }
+    };
+
+    const updateTaskStatus = async (id: string, newStatus: string) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/tasks`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status: newStatus })
+            });
+            if (res.ok) {
+                setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const deleteTask = async (id: string) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/tasks`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) {
+                setTasks(prev => prev.filter(t => t.id !== id));
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Kanban Board</h2>
-                <Button className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
-                    <Plus className="w-4 h-4" /> Add Task
-                </Button>
+                <form onSubmit={addTask} className="flex gap-2 w-full max-w-sm">
+                    <Input
+                        placeholder="New task..."
+                        value={newTaskTitle}
+                        onChange={e => setNewTaskTitle(e.target.value)}
+                        className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl"
+                    />
+                    <Button disabled={isAdding || !newTaskTitle} type="submit" className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
+                        {isAdding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    </Button>
+                </form>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {columns.map(col => (
-                    <div key={col} className="space-y-4">
-                        <div className="flex items-center justify-between px-2">
-                            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">{col}</h3>
-                            <span className="text-[10px] bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded text-zinc-500 uppercase font-mono">
-                                {tasks?.filter(t => t.status.toLowerCase() === col.toLowerCase().replace(" ", "_")).length || 0}
-                            </span>
-                        </div>
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                {columns.map(col => {
+                    const statusKey = col.toLowerCase().replace(" ", "_");
+                    const colTasks = tasks?.filter(t => t.status.toLowerCase() === statusKey);
 
-                        <div className="space-y-3 min-h-[500px] border-2 border-dashed border-zinc-900/50 rounded-2xl p-2 bg-black/20">
-                            {tasks?.filter(t => t.status.toLowerCase() === col.toLowerCase().replace(" ", "_")).map((task, i) => (
-                                <div key={i} className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all cursor-grab active:cursor-grabbing group">
-                                    <p className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors capitalize">{task.title}</p>
-                                    <div className="flex items-center justify-between mt-4">
-                                        <span className="w-6 h-6 rounded-full bg-zinc-800 text-[10px] flex items-center justify-center font-bold border border-zinc-700">?</span>
-                                        <MoreVertical className="w-4 h-4 text-zinc-600" />
+                    return (
+                        <div key={col} className="space-y-4">
+                            <div className="flex items-center justify-between px-2">
+                                <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">{col}</h3>
+                                <span className="text-[10px] bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded text-zinc-500 uppercase font-mono">
+                                    {colTasks?.length || 0}
+                                </span>
+                            </div>
+
+                            <div className="space-y-3 min-h-[500px] border-2 border-dashed border-zinc-900/50 rounded-2xl p-2 bg-black/20">
+                                {colTasks?.map((task, i) => (
+                                    <div key={task.id} className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all group">
+                                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors capitalize">{task.title}</p>
+                                        <div className="flex items-center justify-between mt-4">
+                                            <select
+                                                value={task.status}
+                                                onChange={(e) => updateTaskStatus(task.id, e.target.value)}
+                                                className="bg-black/50 border border-zinc-800 text-xs px-2 py-1 rounded-lg text-zinc-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                            >
+                                                <option value="BACKLOG">Backlog</option>
+                                                <option value="TODO">To Do</option>
+                                                <option value="IN_PROGRESS">In Progress</option>
+                                                <option value="DONE">Done</option>
+                                            </select>
+
+                                            <button onClick={() => deleteTask(task.id)} className="text-zinc-600 hover:text-rose-500 transition-colors">
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                                {(!colTasks || colTasks.length === 0) && (
+                                    <div className="h-20 flex items-center justify-center text-zinc-600 text-xs font-semibold uppercase tracking-widest">
+                                        Empty
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
         </div>
     );
 }
 
-function ResourcesModule({ resources }: { resources: any[] }) {
+
+function ResourcesModule({ teamId, initialResources }: { teamId: string, initialResources: any[] }) {
+    const [resources, setResources] = useState(initialResources);
+    const [isAdding, setIsAdding] = useState(false);
+    const [newTitle, setNewTitle] = useState("");
+    const [newUrl, setNewUrl] = useState("");
+
+    const addResource = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTitle.trim() || !newUrl.trim()) return;
+        setIsAdding(true);
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/resources`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: newTitle, url: newUrl })
+            });
+            if (res.ok) {
+                const newRes = await res.json();
+                setResources(prev => [...prev, newRes]);
+                setNewTitle("");
+                setNewUrl("");
+            }
+        } finally {
+            setIsAdding(false);
+        }
+    };
+
+    const deleteResource = async (id: string) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/resources`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) {
+                setResources(prev => prev.filter(r => r.id !== id));
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
                 <h2 className="text-2xl font-bold">Team Resources</h2>
-                <Button className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
-                    <Plus className="w-4 h-4" /> Add Link
-                </Button>
+                <form onSubmit={addResource} className="flex flex-col sm:flex-row gap-2 w-full max-w-lg">
+                    <Input
+                        placeholder="Link Title (e.g., Figma)"
+                        value={newTitle}
+                        onChange={e => setNewTitle(e.target.value)}
+                        className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl"
+                    />
+                    <Input
+                        placeholder="URL (https://...)"
+                        value={newUrl}
+                        onChange={e => setNewUrl(e.target.value)}
+                        className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl"
+                    />
+                    <Button disabled={isAdding || !newTitle || !newUrl} type="submit" className="bg-indigo-600 hover:bg-indigo-500 rounded-xl whitespace-nowrap px-6">
+                        {isAdding ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add"}
+                    </Button>
+                </form>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {resources?.map((res, i) => (
-                    <Card key={i} className="bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/60 transition-all group overflow-hidden">
+                {resources?.map((res) => (
+                    <Card key={res.id} className="bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/60 transition-all group overflow-hidden">
                         <CardContent className="p-6 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center group-hover:bg-indigo-600/20 group-hover:text-indigo-400 transition-all">
+                            <div className="flex items-center gap-4 overflow-hidden">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center shrink-0 group-hover:bg-indigo-600/20 group-hover:text-indigo-400 transition-all">
                                     <LinkIcon className="w-4 h-4" />
                                 </div>
-                                <div>
-                                    <p className="font-bold text-zinc-200">{res.title}</p>
-                                    <p className="text-xs text-zinc-600 font-mono mt-0.5">{res.url}</p>
+                                <div className="overflow-hidden">
+                                    <p className="font-bold text-zinc-200 truncate">{res.title}</p>
+                                    <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-400 hover:underline font-mono mt-0.5 truncate block">{res.url}</a>
                                 </div>
                             </div>
-                            <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+                            <button onClick={() => deleteResource(res.id)} className="text-zinc-600 hover:text-rose-500 transition-colors shrink-0 ml-4">
+                                <Trash2 className="w-4 h-4" />
+                            </button>
                         </CardContent>
                     </Card>
                 ))}
@@ -350,37 +491,103 @@ function ResourcesModule({ resources }: { resources: any[] }) {
     );
 }
 
-function NotesModule({ notes }: { notes: any[] }) {
+function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: any[] }) {
+    const [notes, setNotes] = useState(initialNotes);
+    const [activeNoteId, setActiveNoteId] = useState<string | null>(initialNotes?.[0]?.id || null);
+    const [isCreating, setIsCreating] = useState(false);
+
+    const activeNote = notes.find(n => n.id === activeNoteId);
+
+    const createNote = async () => {
+        setIsCreating(true);
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/notes`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: "New Note", content: "Start typing here..." })
+            });
+            if (res.ok) {
+                const newNote = await res.json();
+                setNotes([newNote, ...notes]);
+                setActiveNoteId(newNote.id);
+            }
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    const updateNote = async (id: string, updates: { title?: string, content?: string }) => {
+        setNotes(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
+        try {
+            await fetch(`/api/workspace/${teamId}/notes`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, ...updates })
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const deleteNote = async (id: string) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/notes`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) {
+                const remaining = notes.filter(n => n.id !== id);
+                setNotes(remaining);
+                if (activeNoteId === id) {
+                    setActiveNoteId(remaining[0]?.id || null);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Project Notes</h2>
-                <Button className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
-                    <Plus className="w-4 h-4" /> New Note
+                <Button onClick={createNote} disabled={isCreating} className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
+                    {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} New Note
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="lg:col-span-1 space-y-2">
-                    {notes?.map((note, i) => (
-                        <SidebarNote key={i} title={note.title} date="Recently" active={i === 0} />
+                <div className="lg:col-span-1 space-y-2 max-h-[600px] overflow-y-auto pr-2">
+                    {notes?.map((note) => (
+                        <div key={note.id} onClick={() => setActiveNoteId(note.id)} className="cursor-pointer">
+                            <SidebarNote title={note.title} date="Updated recently" active={activeNoteId === note.id} />
+                        </div>
                     ))}
-                    {(!notes || notes.length === 0) && <p className="text-zinc-600 text-sm p-4">No notes created.</p>}
+                    {(!notes || notes.length === 0) && <p className="text-zinc-600 text-sm p-4 text-center">No notes created.</p>}
                 </div>
                 <div className="lg:col-span-3">
                     <Card className="bg-zinc-900/20 border-zinc-800 min-h-[500px] rounded-3xl p-8 space-y-6">
-                        {notes && notes.length > 0 ? (
-                            <>
-                                <div className="space-y-2 border-b border-zinc-800 pb-6">
-                                    <h3 className="text-3xl font-bold">{notes[0].title}</h3>
-                                    <div className="flex items-center gap-3 text-zinc-500 text-xs">
-                                        <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">Draft</span>
-                                    </div>
+                        {activeNote ? (
+                            <div className="space-y-6 flex flex-col h-full">
+                                <div className="flex justify-between items-start border-b border-zinc-800 pb-6 group">
+                                    <input
+                                        value={activeNote.title}
+                                        onChange={(e) => updateNote(activeNote.id, { title: e.target.value })}
+                                        className="text-3xl font-bold bg-transparent border-none focus:ring-0 focus:outline-none w-full text-white"
+                                        placeholder="Note Title"
+                                    />
+                                    <button onClick={() => deleteNote(activeNote.id)} className="text-zinc-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
                                 </div>
-                                <div className="prose prose-invert max-w-none text-zinc-400 leading-relaxed whitespace-pre-wrap">
-                                    {notes[0].content}
-                                </div>
-                            </>
+                                <textarea
+                                    value={activeNote.content}
+                                    onChange={(e) => updateNote(activeNote.id, { content: e.target.value })}
+                                    className="w-full h-full min-h-[400px] bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-zinc-400 leading-relaxed text-base"
+                                    placeholder="Start writing..."
+                                />
+                            </div>
                         ) : (
                             <div className="flex items-center justify-center min-h-[400px] text-zinc-600">
                                 Select a note or create a new one.
@@ -393,7 +600,27 @@ function NotesModule({ notes }: { notes: any[] }) {
     );
 }
 
-function SubmissionModule({ submission }: { submission: any }) {
+function SubmissionModule({ teamId, initialSubmission }: { teamId: string, initialSubmission: any }) {
+    const [sub, setSub] = useState(initialSubmission || { problemStatement: "", solution: "", videoUrl: "" });
+    const [isSaving, setIsSaving] = useState(false);
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/submission`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(sub)
+            });
+            if (res.ok) {
+                const updated = await res.json();
+                setSub(updated);
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-2">
@@ -402,14 +629,50 @@ function SubmissionModule({ submission }: { submission: any }) {
             </div>
 
             <div className="grid grid-cols-1 gap-6">
-                <InputGroup label="Problem Statement" value={submission?.problemStatement} />
-                <InputGroup label="Our Solution" value={submission?.solution} />
-                <div className="grid grid-cols-2 gap-6">
-                    <InputGroup label="GitHub Repository" value={submission?.team?.resources?.[0]?.url} />
-                    <InputGroup label="Demo Video URL" value={submission?.videoUrl} />
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-zinc-400">Problem Statement</label>
+                    <textarea
+                        value={sub.problemStatement || ""}
+                        onChange={e => setSub({ ...sub, problemStatement: e.target.value })}
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-white min-h-[100px] focus:outline-none focus:border-indigo-500"
+                        placeholder="What problem are you solving?"
+                    />
                 </div>
-                <Button className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-2xl shadow-indigo-600/20 text-lg flex items-center gap-2">
-                    <Rocket className="w-5 h-5" /> Generate Final Profile
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-zinc-400">Our Solution</label>
+                    <textarea
+                        value={sub.solution || ""}
+                        onChange={e => setSub({ ...sub, solution: e.target.value })}
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-white min-h-[120px] focus:outline-none focus:border-indigo-500"
+                        placeholder="Explain your technical solution..."
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-zinc-400">Tech Stack</label>
+                        <Input
+                            value={sub.techStack || ""}
+                            onChange={e => setSub({ ...sub, techStack: e.target.value })}
+                            className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl h-12"
+                            placeholder="Next.js, Prisma, Tailwind..."
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-zinc-400">Demo Video URL</label>
+                        <Input
+                            value={sub.videoUrl || ""}
+                            onChange={e => setSub({ ...sub, videoUrl: e.target.value })}
+                            className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 rounded-xl h-12"
+                            placeholder="https://youtube.com/..."
+                        />
+                    </div>
+                </div>
+
+                <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-2xl shadow-indigo-600/20 text-lg flex items-center gap-2 group mt-4">
+                    {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Rocket className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+                    {isSaving ? "Saving..." : "Save Submission Details"}
                 </Button>
             </div>
         </div>
