@@ -40,6 +40,7 @@ import {
     Boxes,
     Cpu,
     Code,
+    Code2,
     ChevronDown,
     Menu,
     GitCommit
