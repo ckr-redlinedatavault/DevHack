@@ -130,7 +130,7 @@ export default function LandingPage() {
             Kernel Stable
           </div>
         </div>
-      </header>
+      </footer>
 
     </div>
   );
