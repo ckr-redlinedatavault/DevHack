@@ -8,8 +8,10 @@ import BottomBanner from "@/components/BottomBar";
 
 export default function LandingPage() {
   const [lastCommit, setLastCommit] = useState<string | null>(null);
+  const [commitCount, setCommitCount] = useState<number | null>(null);
 
   useEffect(() => {
+    // Fetch last commit hash
     fetch("https://api.github.com/repos/RishiRohanKalapala/DevHack/commits/main")
       .then((res) => res.json())
       .then((data) => {
@@ -17,7 +19,23 @@ export default function LandingPage() {
           setLastCommit(data.sha.substring(0, 7));
         }
       })
-      .catch(() => setLastCommit("7e3a2b1")); // Fallback
+      .catch(() => setLastCommit("7e3a2b1"));
+
+    // Fetch total commit count using Link header trick
+    fetch("https://api.github.com/repos/RishiRohanKalapala/DevHack/commits?per_page=1")
+      .then((res) => {
+        const link = res.headers.get("Link");
+        if (link) {
+          const match = link.match(/page=(\d+)>; rel="last"/);
+          if (match) {
+            setCommitCount(parseInt(match[1]));
+          }
+        } else {
+          // If no link header, it might have only a few commits (< per_page)
+          return res.json().then(data => setCommitCount(data.length));
+        }
+      })
+      .catch(() => setCommitCount(154)); // Fallback
   }, []);
 
   return (
@@ -65,6 +83,8 @@ export default function LandingPage() {
             <span className="text-[10px] font-bold hidden sm:inline">GitHub Repository</span>
             <div className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-100 text-[#4f46e5] rounded-md border border-indigo-200 ml-1">
               <GitCommit className="w-3 h-3" />
+              <span className="text-[9px] font-black">{commitCount || "..."} Commits</span>
+              <div className="w-px h-2.5 bg-indigo-200 mx-0.5" />
               <span className="text-[9px] font-black">{lastCommit || "..."}</span>
             </div>
           </Link>
