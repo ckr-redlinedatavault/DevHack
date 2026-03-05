@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, GitCommit, FileText, Search, Activity, User } from "lucide-react";
+import { Loader2, ArrowLeft, GitCommit, FileText, Search, Activity, User, Star, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getSession } from "next-auth/react";
 
@@ -24,6 +24,34 @@ export default function OrganizerCommitsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [eventName, setEventName] = useState("");
+
+    const [rewardingUpdateId, setRewardingUpdateId] = useState<string | null>(null);
+    const [rewardPoints, setRewardPoints] = useState<number>(5);
+    const [isRewarding, setIsRewarding] = useState(false);
+
+    const handleReward = async (teamName: string, updateId: string) => {
+        if (!rewardPoints) return;
+        setIsRewarding(true);
+        try {
+            const res = await fetch(`/api/organizer/events/${eventId}/commits/reward`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ teamName, points: rewardPoints })
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.message || "Failed to reward points");
+            }
+
+            alert(`Successfully awarded ${rewardPoints} points to ${teamName}!`);
+            setRewardingUpdateId(null);
+        } catch (error: any) {
+            alert(error.message);
+        } finally {
+            setIsRewarding(false);
+        }
+    };
 
     useEffect(() => {
         const fetchUpdates = async () => {
@@ -147,6 +175,47 @@ export default function OrganizerCommitsPage() {
                                                 {update.research}
                                             </p>
                                         </div>
+                                    </div>
+
+                                    {/* Action Bar */}
+                                    <div className="pt-4 border-t border-[#27272a] flex items-center justify-between">
+                                        {rewardingUpdateId === update.id ? (
+                                            <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-4 duration-300 w-full">
+                                                <input
+                                                    type="number"
+                                                    value={rewardPoints}
+                                                    onChange={(e) => setRewardPoints(Number(e.target.value))}
+                                                    className="bg-black border border-[#27272a] rounded-lg h-9 px-3 w-24 text-sm font-bold text-emerald-400 outline-none focus:border-emerald-500/50"
+                                                    min="1"
+                                                    max="100"
+                                                />
+                                                <button
+                                                    onClick={() => handleReward(update.teamName, update.id)}
+                                                    disabled={isRewarding}
+                                                    className="h-9 px-4 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all disabled:opacity-50"
+                                                >
+                                                    {isRewarding ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm Points"}
+                                                </button>
+                                                <button
+                                                    onClick={() => setRewardingUpdateId(null)}
+                                                    className="h-9 px-4 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 rounded-lg text-sm font-semibold transition-all"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setRewardingUpdateId(update.id)}
+                                                className="flex items-center gap-2 text-zinc-400 hover:text-emerald-400 text-sm font-semibold transition-colors group/reward"
+                                            >
+                                                <Star className="w-4 h-4 group-hover/reward:fill-emerald-400/20" /> Reward Points via Commits
+                                            </button>
+                                        )}
+                                        {rewardingUpdateId !== update.id && (
+                                            <div className="flex items-center gap-1 text-xs font-semibold text-zinc-600 uppercase tracking-widest">
+                                                Quick Actions <ChevronRight className="w-4 h-4" />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
