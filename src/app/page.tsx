@@ -1,11 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Zap, Github, Terminal, Activity, Layers, Users, AlertTriangle, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, Zap, Github, Terminal, Activity, Layers, Users, AlertTriangle, AlertCircle, GitCommit } from "lucide-react";
 import Image from "next/image";
 import BottomBanner from "@/components/BottomBar";
 
 export default function LandingPage() {
+  const [lastCommit, setLastCommit] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("https://api.github.com/repos/RishiRohanKalapala/DevHack/commits/main")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.sha) {
+          setLastCommit(data.sha.substring(0, 7));
+        }
+      })
+      .catch(() => setLastCommit("7e3a2b1")); // Fallback
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-[#000000] text-zinc-400 selection:bg-[#4f46e5]/30 font-sans overflow-hidden flex flex-col relative tracking-tight">
 
@@ -45,10 +59,14 @@ export default function LandingPage() {
           <Link
             href="https://github.com/RishiRohanKalapala/DevHack"
             target="_blank"
-            className="flex items-center gap-2 px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 transition-all rounded-lg"
+            className="flex items-center gap-2 pr-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 transition-all rounded-lg pl-5 py-2.5"
           >
             <Github className="w-4 h-4" />
             <span className="text-[10px] font-bold hidden sm:inline">GitHub Repository</span>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-100 text-[#4f46e5] rounded-md border border-indigo-200 ml-1">
+              <GitCommit className="w-3 h-3" />
+              <span className="text-[9px] font-black">{lastCommit || "..."}</span>
+            </div>
           </Link>
 
           <Link
