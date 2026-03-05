@@ -5,14 +5,14 @@
 <h1 align="center">DevHack v2.0</h1>
 
 <p align="center">
-  <strong>The Ultimate Agentic Ecosystem for High-Performance Hackathon Teams</strong>
+  <strong>The Ultimate Agentic Ecosystem for High-Performance Hackathon Teams and Organizers</strong>
 </p>
 
 <p align="center">
   <a href="#overview">Overview</a> | 
   <a href="#innovations">Innovations</a> | 
   <a href="#technical-stack">Technical Stack</a> | 
-  <a href="#key-modules">Key Modules</a> | 
+  <a href="#core-functionalities">Core Functionalities</a> | 
   <a href="#setup">Setup</a>
 </p>
 
@@ -20,14 +20,14 @@
 
 ## Overview
 
-**DevHack v2** is a revolutionary collaborative workspace engineered for the modern hackathon era. It transforms the chaotic high-pressure environment of a hackathon into a streamlined, high-density innovation hub. By integrating autonomous agentic intelligence with robust project management, DevHack v2 enables teams to transition from raw ideation to production-ready submissions with unparalleled speed.
+**DevHack v2** is a revolutionary collaborative workspace and event management platform engineered for the modern hackathon era. It transforms the chaotic high-pressure environment of a hackathon into a streamlined, high-density innovation hub for both hackers and organizers. By integrating real-time intelligence with robust project and event management, DevHack v2 enables teams to transition from raw ideation to production-ready submissions with unparalleled speed while organizers monitor and direct the entire hackathon lifecycle perfectly.
 
 ## Innovations in v2
 
-- **Next-Gen Architecture**: Migrated to **Next.js 16** and **React 19** for cutting-edge performance and developer experience.
-- **Agentic Intelligence**: Integrated **Antigravity AI** capabilities for autonomous debugging, documentation generation, and problem analysis.
-- **Enhanced Reliability**: Comprehensive linting and type-safety optimizations across the entire stack.
-- **Modernized Middleware**: Implementation of the new **Proxy** convention for secure, high-performance request handling.
+- **Next-Gen Architecture**: Migrated to Next.js 16 and React 19 for cutting-edge performance and developer experience.
+- **Event Orchestration**: Fully integrated Organizer and Judge portals for granular event control, team scoring, and real-time timeline management.
+- **Aggressive Real-Time Data**: Live leaderboard synchronization, rapid polling, and active cache-busting to ensure global state matches the second points are awarded.
+- **Agentic Intelligence**: Integrated Antigravity AI capabilities for autonomous debugging, documentation generation, and problem analysis.
 
 ## Technical Stack
 
@@ -38,43 +38,41 @@
 | **Language** | TypeScript |
 | **Library** | React 19 (Stable) |
 | **Styling** | Tailwind CSS 4 |
-| **State** | Zustand |
-| **Intelligence** | Antigravity Agentic AI |
-
-| Infrastructure | Tool |
-| :--- | :--- |
-| **Runtime** | Node.js 20+ |
-| **ORM** | Prisma / query-compiler-fast |
-| **Cache** | Redis (ioredis) |
 | **Database** | PostgreSQL |
-| **Auth** | NextAuth.js |
+| **ORM** | Prisma |
 
-## Key Modules
+## Core Functionalities
 
-### Agentic Problem Discovery
-Search and curate global problem statements from major events (SIH 2025, etc.) using automated scraping and AI categorization.
+### Global Live Leaderboard
+A real-time public scoreboard tracking team performances globally. Features a synchronized rapid clock module seamlessly recalculating dynamic task completions, project submissions, and manual rewards awarded live by organizers. 
 
-### Secure Workspace Hub
-High-density project management with invite-only access, team statistics, and centralized resource management.
+### Organizer Control Room
+An absolute command center for organizers. Monitor live team registration feeds, oversee global timeline schedules, manage custom problem statements, assign specific jury pools, and run an exclusive "Ceremony Mode" embargo masking live results until stage reveal.
 
-### Rapid-Iterate Kanban
-A specialized task board designed for 24-48 hour sprints, featuring real-time status syncing and priority management.
+### Rapid Reward Commits System
+Hackers natively "Push Update" their research notes and development commits directly to the Organizer dashboard. Without leaving the commit log, organizers can immediately read logs, review progress, and organically reward explicit point values back into the live leaderboard.
+
+### Secure Team Workspace Hub
+High-density sprint management with secure invite-only codes. Includes native task tracking, dynamic markdown team notes, centralized resource libraries, and integrated final project submission portals.
+
+### Jury Evaluation Portal
+A dedicated, isolated scoring environment for event Judges to log into and assess team project submissions across metrics such as Innovation, Implementation, Design, and Impact, instantly feeding averages back to the global scoreboard.
 
 ### Polyglot Resource Library
-Exhaustive documentation and boilerplate hub for over **75+ technology stacks**, helping teams ship faster without leaving the environment.
+Exhaustive documentation and boilerplate hub for over 75+ technology stacks, helping teams ship faster without leaving the environment to search the web recursively.
 
 ## Setup
 
 ### Prerequisites
 - Node.js 20.x or higher
-- PostgreSQL & Redis instances
+- PostgreSQL Database URL
 
 ### Setup Steps
 
 1. **Clone the Repository**
 ```bash
-git clone https://github.com/ckr-redlinedatavault/DevHack-v2.git
-cd devhack
+git clone https://github.com/ckr-redlinedatavault/DevHack.git
+cd DevHack
 ```
 
 2. **Install Dependencies**
@@ -86,15 +84,15 @@ npm install
 Create a `.env` file with the following keys:
 ```env
 DATABASE_URL="postgresql://..."
-REDIS_URL="redis://..."
 NEXTAUTH_SECRET="..."
-NEXT_PUBLIC_APP_URL="https://dev-hack-v2-xi.vercel.app"
+NEXTAUTH_URL="http://localhost:3000"
+RESEND_API_KEY="..."
 ```
 
 4. **Initialize System**
 ```bash
 npx prisma db push
-npm run build
+npx prisma generate
 ```
 
 5. **Start Innovation**
