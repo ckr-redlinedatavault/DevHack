@@ -58,7 +58,7 @@ export default function LandingPage() {
 
       {/* 2. Surgical Main Content - Centered & Highlighted */}
       <main className="flex-1 relative flex flex-col justify-center items-center px-6 md:px-12 w-full max-w-[90rem] mx-auto z-10 py-16 text-center">
-        <div className="relative w-full max-w-5xl flex flex-col items-center p-12 md:p-24 rounded-[3rem] bg-[#080808] border border-white/[0.05] space-y-12 shadow-2xl overflow-hidden group/hero">
+        <div className="relative w-full max-w-5xl flex flex-col items-center p-12 md:p-24 rounded-[3rem] bg-[#080808] space-y-12 shadow-2xl overflow-hidden group/hero">
           {/* Subtle Inner Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#4f46e5]/20 to-transparent" />
           <div className="absolute inset-0 bg-[#4f46e5]/[0.02] pointer-events-none" />
