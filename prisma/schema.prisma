@@ -44,6 +44,7 @@ model Team {
   submission    Submission?
   joinRequests  JoinRequest[]
   problemStatements ProblemStatement[]
+  updates       TeamUpdate[]
 }
 
 model TeamMember {
@@ -168,6 +169,7 @@ model HackathonEvent {
   registrations EventRegistration[]
   timelines     TimelineEvent[]
   judges        Judge[]
+  teamUpdates   TeamUpdate[]
 }
 
 enum EventStatus {
@@ -226,5 +228,16 @@ model TimelineEvent {
   event     HackathonEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
   title     String
   time      DateTime
+  createdAt DateTime       @default(now())
+}
+
+model TeamUpdate {
+  id        String         @id @default(cuid())
+  teamId    String
+  team      Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  eventId   String
+  event     HackathonEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  comment   String
+  research  String
   createdAt DateTime       @default(now())
 }
