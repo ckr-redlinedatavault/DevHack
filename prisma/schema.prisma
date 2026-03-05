@@ -199,8 +199,9 @@ model EventRegistration {
   leadEmail String
   status    RegistrationStatus @default(PENDING)
   totalScore Float             @default(0)
-  createdAt DateTime           @default(now())
-  scores    Score[]
+  handRaised Boolean      @default(false)
+  createdAt  DateTime           @default(now())
+  scores     Score[]
 }
 
 model Score {

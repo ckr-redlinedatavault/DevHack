@@ -4,66 +4,73 @@ import nodemailer from "nodemailer";
 import { getOrganizerId } from "@/lib/organizer-auth-utils";
 
 export async function POST(req: Request, { params }: { params: Promise<{ eventId: string }> }) {
-    try {
-        const organizerId = await getOrganizerId();
-        const { eventId } = await params;
-        const { emails } = await req.json();
+  try {
+    const organizerId = await getOrganizerId();
+    const { eventId } = await params;
+    const { emails } = await req.json(); // Array of { teamName, email }
 
-        if (!organizerId) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-        }
+    if (!organizerId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-        if (!emails || !Array.isArray(emails) || emails.length === 0) {
-            return NextResponse.json({ message: "No emails provided" }, { status: 400 });
-        }
+    if (!emails || !Array.isArray(emails) || emails.length === 0) {
+      return NextResponse.json({ message: "No data provided" }, { status: 400 });
+    }
 
-        const event = await prisma.hackathonEvent.findUnique({
-            where: { id: eventId, organizerId },
+    const event = await prisma.hackathonEvent.findUnique({
+      where: { id: eventId, organizerId },
+    });
+
+    if (!event) {
+      return NextResponse.json({ message: "Event not found" }, { status: 404 });
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
+    const liveEventUrl = `${baseUrl}/event/${eventId}/live`;
+
+    const invitationResults = [];
+
+    for (const entry of emails) {
+      const cleanEmail = entry.email.trim().toLowerCase();
+      const cleanTeamName = entry.teamName.trim() || cleanEmail.split('@')[0];
+      if (!cleanEmail) continue;
+
+      // 1. Create registration if not exists
+      let registration = await prisma.eventRegistration.findFirst({
+        where: { eventId, leadEmail: cleanEmail }
+      });
+
+      if (!registration) {
+        registration = await prisma.eventRegistration.create({
+          data: {
+            eventId,
+            leadEmail: cleanEmail,
+            teamName: cleanTeamName,
+            status: "PENDING"
+          }
         });
-
-        if (!event) {
-            return NextResponse.json({ message: "Event not found" }, { status: 404 });
-        }
-
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
+      } else {
+        // update team name if registration exists
+        await prisma.eventRegistration.update({
+          where: { id: registration.id },
+          data: { teamName: cleanTeamName }
         });
+      }
 
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
-        const liveEventUrl = `${baseUrl}/event/${eventId}/live`;
-
-        const invitationResults = [];
-
-        for (const email of emails) {
-            const cleanEmail = email.trim().toLowerCase();
-            if (!cleanEmail) continue;
-
-            // 1. Create registration if not exists
-            let registration = await prisma.eventRegistration.findFirst({
-                where: { eventId, leadEmail: cleanEmail }
-            });
-
-            if (!registration) {
-                registration = await prisma.eventRegistration.create({
-                    data: {
-                        eventId,
-                        leadEmail: cleanEmail,
-                        teamName: cleanEmail.split('@')[0], // Default team name if none provided
-                        status: "PENDING"
-                    }
-                });
-            }
-
-            // 2. Send Email
-            const mailOptions = {
-                from: `"DevHack Organizer" <${process.env.GMAIL_USER}>`,
-                to: cleanEmail,
-                subject: `Approval Granted: Welcome to ${event.name}!`,
-                html: `
+      // 2. Send Email
+      const mailOptions = {
+        from: `"DevHack Organizer" <${process.env.GMAIL_USER}>`,
+        to: cleanEmail,
+        subject: `Approval Granted: Welcome to ${event.name}!`,
+        html: `
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
@@ -93,7 +100,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
                       <img src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png" alt="DevHack" class="logo-img" />
                       <span class="eyebrow">Access Granted</span>
                       <h1>Welcome to the arena.</h1>
-                      <p>Hello ${registration.teamName} team lead,</p>
+                      <p>Hello ${cleanTeamName} team lead,</p>
                       <p>Your registration for <strong style="color: #ffffff;">${event.name}</strong> has been officially approved. The arena is now open for your team.</p>
                       <p>Access the live mission portal to track the timeline, view the synchronized timer, and prepare for the build phase.</p>
                       
@@ -123,23 +130,23 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
         </body>
         </html>
                 `,
-            };
+      };
 
-            await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
 
-            // 3. Update status to INVITED
-            await prisma.eventRegistration.update({
-                where: { id: registration.id },
-                data: { status: "INVITED" }
-            });
+      // 3. Update status to INVITED
+      await prisma.eventRegistration.update({
+        where: { id: registration.id },
+        data: { status: "INVITED" }
+      });
 
-            invitationResults.push(cleanEmail);
-        }
-
-        return NextResponse.json({ message: "Invitations sent successfully", results: invitationResults }, { status: 200 });
-
-    } catch (error) {
-        console.error("Bulk invite error:", error);
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+      invitationResults.push(cleanEmail);
     }
+
+    return NextResponse.json({ message: "Invitations sent successfully", results: invitationResults }, { status: 200 });
+
+  } catch (error) {
+    console.error("Bulk invite error:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+  }
 }

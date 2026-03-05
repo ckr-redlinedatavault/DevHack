@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Trophy, Medal, CheckCircle2, CircleDashed, Loader2, Lock, Eye } from "lucide-react";
+import { Trophy, Medal, CheckCircle2, CircleDashed, Loader2, Lock, Eye, Hand } from "lucide-react";
 
 export default function LiveLeaderboard({ eventId }: { eventId: string }) {
     const [leaderboard, setLeaderboard] = useState<any[]>([]);
@@ -173,7 +173,12 @@ export default function LiveLeaderboard({ eventId }: { eventId: string }) {
                         </div>
 
                         {/* Status */}
-                        <div className="col-span-2 flex justify-end">
+                        <div className="col-span-2 flex items-center justify-end gap-2">
+                            {team.handRaised && (
+                                <div className="flex items-center gap-1.5 text-rose-500 animate-pulse bg-rose-500/10 px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider border border-rose-500/20">
+                                    <Hand className="w-3 h-3 fill-rose-500" /> Help
+                                </div>
+                            )}
                             {team.hasSubmission ? (
                                 <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider border border-emerald-500/20">
                                     <CheckCircle2 className="w-3 h-3" /> Sent

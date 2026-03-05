@@ -66,6 +66,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
                 judgeScore: reg.totalScore, // Average from judges
                 tasksCompleted,
                 hasSubmission,
+                handRaised: reg.handRaised,
                 joinedAt: reg.createdAt,
             };
         }));

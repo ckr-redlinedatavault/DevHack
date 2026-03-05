@@ -78,7 +78,17 @@ export async function GET(
         // 3. Update Cache (TTL 60s for Balancing)
         await setCachedData(cacheKey, team, 60);
 
-        return NextResponse.json({ ...team, currentUserId: userId });
+        // Include Hand Raise status for Workspace consumption
+        const lead = team.members.find(m => m.role === 'LEAD');
+        let handRaised = false;
+        if (lead) {
+            const registration = await prisma.eventRegistration.findFirst({
+                where: { leadEmail: lead.user.email, status: "INVITED" }
+            });
+            handRaised = !!registration?.handRaised;
+        }
+
+        return NextResponse.json({ ...team, handRaised, currentUserId: userId });
     } catch (error: any) {
         console.error("Fetch team error:", error);
         return NextResponse.json(

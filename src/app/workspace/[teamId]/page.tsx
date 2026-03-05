@@ -46,7 +46,8 @@ import {
     GitCommit,
     Share2,
     CheckCircle2,
-    Activity
+    Activity,
+    Hand
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,6 +80,8 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
     const [activeModule, setActiveModule] = useState("overview");
     const [copied, setCopied] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isHandRaised, setIsHandRaised] = useState(false);
+    const [isHandSubmitting, setIsHandSubmitting] = useState(false);
 
     useEffect(() => {
         const fetchTeam = async () => {
@@ -87,6 +90,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                 if (res.ok) {
                     const data = await res.json();
                     setTeam(data);
+                    setIsHandRaised(data.handRaised || false);
                 } else {
                     const err = await res.json().catch(() => ({}));
                     console.error("Team fetch failed:", res.status, err.message);
@@ -99,6 +103,21 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
         };
         fetchTeam();
     }, [teamId]);
+
+    const handleHandRaise = async () => {
+        setIsHandSubmitting(true);
+        try {
+            const res = await fetch(`/api/teams/${teamId}/hand-raise`, { method: "POST" });
+            if (res.ok) {
+                const data = await res.json();
+                setIsHandRaised(data.handRaised);
+            }
+        } catch (error) {
+            console.error("error raising hand:", error);
+        } finally {
+            setIsHandSubmitting(false);
+        }
+    };
 
     const copyInvite = () => {
         if (team?.inviteCode) {
@@ -202,6 +221,23 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                 </div>
 
                 <div className="mt-auto p-6 space-y-4 border-t border-white/5 bg-zinc-950/40">
+                    <button
+                        onClick={handleHandRaise}
+                        disabled={isHandSubmitting}
+                        className={`w-full h-11 border border-rose-500/20 rounded-xl transition-all flex items-center justify-center gap-3 font-black group relative overflow-hidden ${isHandRaised ? "bg-rose-500 text-white shadow-xl shadow-rose-500/20" : "bg-rose-500/10 text-rose-500"}`}
+                    >
+                        {isHandSubmitting ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <>
+                                <Hand className={`w-4 h-4 ${isHandRaised ? "animate-bounce" : "group-hover:translate-y-[-2px] transition-transform"}`} />
+                                <span className="text-[10px] uppercase tracking-widest leading-none">
+                                    {isHandRaised ? "In Distress" : "Raise Hand"}
+                                </span>
+                            </>
+                        )}
+                    </button>
+
                     <button onClick={copyInvite} className="w-full flex items-center justify-between px-4 py-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-indigo-500/30 transition-all text-left">
                         <div className="space-y-0.5">
                             <p className="text-[10px] uppercase font-bold text-zinc-600 tracking-wider">Invite Code</p>

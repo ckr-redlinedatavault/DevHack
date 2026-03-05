@@ -18,12 +18,27 @@ export default function BulkInvitePage() {
         }
 
         const emailList = emails
-            .split(/[\n,;]/)
-            .map(e => e.trim())
-            .filter(e => e && e.includes('@'));
+            .split(/[\n;]/)
+            .map(row => {
+                const parts = row.split('|');
+                if (parts.length >= 2) {
+                    return {
+                        teamName: parts[0].trim(),
+                        email: parts[1].trim().toLowerCase()
+                    };
+                } else if (row.includes('@')) {
+                    const email = row.trim().toLowerCase();
+                    return {
+                        teamName: email.split('@')[0],
+                        email: email
+                    };
+                }
+                return null;
+            })
+            .filter(e => e && e.email.includes('@'));
 
         if (emailList.length === 0) {
-            setStatus({ type: 'error', message: "No valid email addresses found." });
+            setStatus({ type: 'error', message: "No valid 'Team | Email' pairs found." });
             return;
         }
 
@@ -80,15 +95,15 @@ export default function BulkInvitePage() {
                             <textarea
                                 value={emails}
                                 onChange={(e) => setEmails(e.target.value)}
-                                placeholder="lead1@example.com&#10;lead2@example.com, lead3@example.com"
+                                placeholder="Team Alpha | lead1@example.com&#10;Team Beta | lead2@example.com"
                                 className="w-full h-80 bg-black/40 border border-white/10 rounded-2xl p-6 text-sm text-white placeholder:text-zinc-800 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all font-mono leading-relaxed"
                             />
                         </div>
 
                         {status && (
                             <div className={`p-4 rounded-xl flex items-center gap-3 animate-in fade-in zoom-in duration-300 ${status.type === 'success'
-                                    ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500'
-                                    : 'bg-rose-500/10 border border-rose-500/20 text-rose-500'
+                                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500'
+                                : 'bg-rose-500/10 border border-rose-500/20 text-rose-500'
                                 }`}>
                                 {status.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
                                 <p className="text-sm font-bold">{status.message}</p>
@@ -121,7 +136,7 @@ export default function BulkInvitePage() {
                         <div className="space-y-4">
                             <div className="space-y-1.5 px-1">
                                 <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Formatting</p>
-                                <p className="text-xs text-zinc-500 leading-relaxed font-medium">You can separate emails using new lines, commas, or semicolons. Duplicates are automatically handled.</p>
+                                <p className="text-xs text-zinc-500 leading-relaxed font-medium">Use 'Team Name | email@example.com' format per line. Vertical bar (|) is required to specify the team name.</p>
                             </div>
                             <div className="space-y-1.5 px-1">
                                 <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Onboarding</p>
