@@ -77,7 +77,7 @@ export default function LandingPage() {
           <Link
             href="https://github.com/RishiRohanKalapala/DevHack"
             target="_blank"
-            className="flex items-center gap-2 pr-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 transition-all rounded-lg pl-5 py-2.5"
+            className="flex items-center gap-2 pr-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-900 transition-all rounded-lg pl-5 py-2.5"
           >
             <Github className="w-4 h-4" />
             <span className="text-[10px] font-bold hidden sm:inline">GitHub Repository</span>
