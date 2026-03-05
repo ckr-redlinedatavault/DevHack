@@ -60,7 +60,7 @@ export default function LandingPage() {
       <main className="flex-1 relative w-full max-w-[90rem] mx-auto px-6 md:px-12 z-10 flex items-center py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
 
-          <div className="flex flex-col items-start text-left space-y-10 animate-in fade-in slide-in-from-left-8 duration-1000">
+          <div className="flex flex-col items-start text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
 
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5] border border-[#4f46e5]/20 shadow-[0_0_20px_rgba(79,70,229,0.2)]">
               <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
@@ -69,17 +69,17 @@ export default function LandingPage() {
               <span className="text-[10px] font-medium text-white/90">System was set for the Beta leveled Tester instance</span>
             </div>
 
-            <div className="space-y-6">
-              <h1 className="text-5xl md:text-6xl lg:text-8xl font-medium tracking-tighter leading-[0.9] text-white">
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-medium tracking-tighter leading-[0.9] text-white">
                 Build <br />
                 <span className="text-[#4f46e5]">Beyond</span> Limits.
               </h1>
-              <p className="max-w-lg text-sm md:text-base text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80">
+              <p className="max-w-md text-xs md:text-sm text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80">
                 DevHack is the surgical-grade workspace for the next generation of builders. Engineered for absolute speed, precision, and collaborative excellence.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl">
               <Link
                 href="/dashboard"
                 className="group flex items-center justify-between p-6 bg-[#0c0c0c] border border-white/[0.05] rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
