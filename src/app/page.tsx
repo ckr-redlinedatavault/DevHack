@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Zap, Github, Terminal, Activity, Layers, Users, AlertTriangle, AlertCircle } from "lucide-react";
 import Image from "next/image";
-import { BottomBar } from "@/components/BottomBar";
+import BottomBanner from "@/components/BottomBar";
 
 export default function LandingPage() {
   return (
@@ -130,7 +130,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <BottomBar />
+      <BottomBanner />
 
     </div>
   );
