@@ -15,7 +15,9 @@ export default function LiveLeaderboard({ eventId }: { eventId: string }) {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const res = await fetch(`/api/event/${eventId}/leaderboard`);
+                const res = await fetch(`/api/event/${eventId}/leaderboard?_t=${Date.now()}`, {
+                    cache: 'no-store'
+                });
                 if (res.ok) {
                     const data = await res.json();
                     setLeaderboard(data.leaderboard);

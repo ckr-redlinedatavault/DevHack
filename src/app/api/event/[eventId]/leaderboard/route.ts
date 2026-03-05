@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request, { params }: { params: Promise<{ eventId: string }> }) {
     try {
         const { eventId } = await params;
@@ -53,6 +55,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
                     dynamicScore += 100;
                 }
             }
+
+            // Inject organizer reward points natively into the dynamic score
+            dynamicScore += reg.totalScore;
 
             return {
                 id: reg.id,

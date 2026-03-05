@@ -28,6 +28,8 @@ export default function OrganizerCommitsPage() {
     const [rewardingUpdateId, setRewardingUpdateId] = useState<string | null>(null);
     const [rewardPoints, setRewardPoints] = useState<number>(5);
     const [isRewarding, setIsRewarding] = useState(false);
+    const [countdown, setCountdown] = useState(15);
+    const [realTime, setRealTime] = useState("");
 
     const handleReward = async (teamName: string, updateId: string) => {
         if (!rewardPoints) return;
@@ -74,8 +76,25 @@ export default function OrganizerCommitsPage() {
         };
 
         fetchUpdates();
-        const interval = setInterval(fetchUpdates, 15000); // Polling every 15s for new updates
-        return () => clearInterval(interval);
+
+        // Polling every 15s for new updates
+        const fetchInterval = setInterval(() => {
+            fetchUpdates();
+            setCountdown(15);
+        }, 15000);
+
+        // Ticking every 1s for the clock UI
+        const tickInterval = setInterval(() => {
+            setCountdown((prev) => (prev > 1 ? prev - 1 : 15));
+            setRealTime(new Date().toLocaleTimeString('en-US', { hour12: false }));
+        }, 1000);
+
+        setRealTime(new Date().toLocaleTimeString('en-US', { hour12: false }));
+
+        return () => {
+            clearInterval(fetchInterval);
+            clearInterval(tickInterval);
+        };
     }, [eventId, router]);
 
     if (isLoading) {
@@ -112,12 +131,24 @@ export default function OrganizerCommitsPage() {
                                 Real-time repository of team research, comments, and task completions submitted for {eventName}.
                             </p>
                         </div>
-                        <div className="flex items-center gap-2 text-[10px] font-semibold text-rose-500 bg-rose-500/10 px-3 py-1.5 rounded-sm border border-rose-500/20 uppercase tracking-widest whitespace-nowrap">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full bg-rose-500 opacity-75"></span>
-                                <span className="relative inline-flex h-2 w-2 bg-rose-500"></span>
-                            </span>
-                            Live Link Active
+                        <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                            {/* Sharp Edged Real-Time Timer & Countdown */}
+                            <div className="flex items-center border border-[#27272a] bg-[#0a0a0a] text-[10px] font-mono tracking-widest text-zinc-500 uppercase whitespace-nowrap overflow-hidden">
+                                <div className="px-3 py-1.5 border-r border-[#27272a] text-white">
+                                    {realTime || "00:00:00"}
+                                </div>
+                                <div className="px-2 py-1.5 flex items-center gap-1.5 min-w-fit">
+                                    Refresh <span className="text-rose-500 w-3 text-center">{countdown}</span>s
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-[10px] font-semibold text-rose-500 bg-rose-500/10 px-3 py-1.5 rounded-sm border border-rose-500/20 uppercase tracking-widest whitespace-nowrap">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full bg-rose-500 opacity-75"></span>
+                                    <span className="relative inline-flex h-2 w-2 bg-rose-500"></span>
+                                </span>
+                                Live Sync
+                            </div>
                         </div>
                     </div>
                 </div>
