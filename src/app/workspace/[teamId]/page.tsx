@@ -2348,7 +2348,7 @@ function PushUpdateModule({ teamId, teamName }: { teamId: string, teamName: stri
                         </div>
                         {events.length === 0 && (
                             <p className="text-[10px] text-zinc-500 font-medium pl-1 mt-1">
-                                No registered events found. You must be registered for an event to push updates.
+                                No active hackathon events found in the system.
                             </p>
                         )}
                     </div>

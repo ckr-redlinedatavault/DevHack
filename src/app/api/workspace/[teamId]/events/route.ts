@@ -8,36 +8,21 @@ export async function GET(
     try {
         const { teamId } = await params;
 
-        // Fetch team hackathon events based on registrations
-        // Find registrations linked to this team's name (since EventRegistration uses teamName currently)
-        const team = await prisma.team.findUnique({
-            where: { id: teamId },
-            select: { name: true }
-        });
-
-        if (!team) {
-            return NextResponse.json({ message: "Team not found" }, { status: 404 });
-        }
-
-        const registeredEvents = await prisma.eventRegistration.findMany({
-            where: {
-                teamName: team.name, // Link hackathons they registered for
+        // Fetch ALL hackathon events in the system so teams can freely commit updates to any active event
+        const events = await prisma.hackathonEvent.findMany({
+            select: {
+                id: true,
+                name: true,
             },
-            include: {
-                event: {
-                    select: {
-                        id: true,
-                        name: true,
-                    }
-                }
+            orderBy: {
+                createdAt: 'desc'
             }
         });
 
-        const events = registeredEvents.map(r => r.event);
-
+        // Add 'status' or other fields if needed for display in the dropdown.
         return NextResponse.json({ events }, { status: 200 });
     } catch (error) {
-        console.error("Error fetching team registered events:", error);
+        console.error("Error fetching events:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }
