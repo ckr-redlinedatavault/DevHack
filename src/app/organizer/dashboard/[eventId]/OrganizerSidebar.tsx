@@ -10,7 +10,8 @@ import {
     ArrowLeft,
     Activity,
     ExternalLink,
-    GitCommit
+    GitCommit,
+    Mail
 } from "lucide-react";
 
 export default function OrganizerSidebar({ eventId, eventName }: { eventId: string, eventName: string }) {
@@ -21,6 +22,7 @@ export default function OrganizerSidebar({ eventId, eventName }: { eventId: stri
         { name: "Team Hub", href: `/organizer/dashboard/${eventId}/teams`, icon: Users },
         { name: "Updates & Commits", href: `/organizer/dashboard/${eventId}/commits`, icon: GitCommit },
         { name: "Judges Panel", href: `/organizer/dashboard/${eventId}/judges`, icon: Gavel },
+        { name: "Bulk Invitations", href: `/organizer/dashboard/${eventId}/bulk-invite`, icon: Mail },
         { name: "Live Timeline", href: `/organizer/dashboard/${eventId}/timeline`, icon: Clock },
         { name: "System Controls", href: `/organizer/dashboard/${eventId}/controls`, icon: Activity },
     ];
