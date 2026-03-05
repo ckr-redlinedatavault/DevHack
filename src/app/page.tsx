@@ -26,7 +26,7 @@ export default function LandingPage() {
             width={200}
             height={50}
             priority
-            className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:scale-105 select-none invert contrast-125"
+            className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:scale-105 select-none"
           />
           <div className="hidden lg:flex h-4 w-px bg-black/10" />
           <div className="hidden lg:flex items-center gap-5 text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
@@ -35,22 +35,26 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-6 pr-4 border-r border-black/10">
-            <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="flex items-center gap-2 text-zinc-900 group hover:text-[#4f46e5] transition-all">
-              <Github className="w-4.5 h-4.5" />
-              <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">GitHub</span>
-            </Link>
-          </div>
+        <div className="flex items-center gap-4">
+          <Link
+            href="https://github.com/RishiRohanKalapala/DevHack"
+            target="_blank"
+            className="flex items-center gap-2 px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 transition-all rounded-lg"
+          >
+            <Github className="w-4 h-4" />
+            <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">GitHub Repository</span>
+          </Link>
+
           <Link
             href="/login"
-            className="text-[10px] font-bold text-zinc-900 hover:text-[#4f46e5] transition-all uppercase tracking-widest"
+            className="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-[10px] font-bold transition-all uppercase tracking-widest rounded-lg"
           >
             Login
           </Link>
+
           <Link
             href="/register"
-            className="px-6 py-2 bg-[#4f46e5] text-white text-[10px] font-black rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 uppercase tracking-widest shadow-[0_5px_15px_rgba(79,70,229,0.2)]"
+            className="px-6 py-2.5 bg-[#4f46e5] text-white text-[10px] font-black rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 uppercase tracking-widest shadow-lg shadow-[#4f46e5]/20"
           >
             Join Mission
           </Link>
