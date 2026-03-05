@@ -106,10 +106,10 @@ export default function LandingPage() {
       </header>
 
       {/* 2. Surgical Main Content - Centered & Highlighted */}
-      <main className="flex-1 relative w-full max-w-[90rem] mx-auto px-6 md:px-12 z-10 flex items-center py-12 md:py-20 lg:py-24">
+      <main className="flex-1 relative w-full max-w-[90rem] mx-auto px-6 md:px-12 z-10 flex items-center py-6 md:py-10 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center w-full">
 
-          <div className="flex flex-col items-start text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
+          <div className="flex flex-col items-start text-left space-y-6 animate-in fade-in slide-in-from-left-8 duration-1000">
 
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5] border border-[#4f46e5]/20 shadow-[0_0_20px_rgba(79,70,229,0.2)]">
               <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />

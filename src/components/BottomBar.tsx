@@ -4,7 +4,7 @@ import React from "react";
 
 const BottomBanner = () => {
     return (
-        <footer className="w-full bg-[#E61E32] border-t border-[#CC192A]/30 py-8 pb-14 md:pb-8 font-sans">
+        <footer className="w-full bg-[#E61E32] border-t border-[#CC192A]/30 py-4 pb-6 md:pb-4 font-sans">
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-10 md:gap-6">
                     <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-10">
