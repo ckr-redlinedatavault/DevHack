@@ -280,7 +280,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                     {activeModule === "notes" && <NotesModule teamId={teamId} initialNotes={team.notes || []} />}
                     {activeModule === "submission" && <SubmissionModule teamId={teamId} initialSubmission={team.submission} />}
                     {activeModule === "members" && <MembersModule team={team} copyInvite={copyInvite} copied={copied} />}
-                    {activeModule === "problem-statements" && <ProblemStatementsModule teamId={teamId} initialProblems={team.problemStatements || []} />}
+                    {activeModule === "problem-statements" && <ProblemStatementsModule team={team} initialProblems={team.problemStatements || []} />}
                     {activeModule === "browse-tools" && <BrowseToolsModule />}
                     {activeModule === "llm" && <LLMModule team={team} />}
                     {activeModule === "code-library" && <CodeLibraryModule />}
@@ -837,7 +837,8 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
     );
 }
 
-function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, initialProblems: any[] }) {
+function ProblemStatementsModule({ team, initialProblems }: { team: any, initialProblems: any[] }) {
+    const teamId = team.id;
     const [problems, setProblems] = useState(initialProblems);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -855,11 +856,14 @@ function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, 
     const analyzeProblem = async (problem: any) => {
         setAnalyzingIds(prev => new Set(prev).add(problem.id));
         try {
-            const prompt = `Analyze this hackathon problem statement in extreme detail. Extract core themes, suggest a modern tech stack, list 3 potential technical roadblocks, and outline a high-level solution architecture.\nTitle: ${problem.title}\nDescription: ${problem.description}`;
+            const prompt = `Analyze this hackathon problem statement in extreme detail. 
+Context: My team "${team.name}" is working on "${team.projectName || 'a hackathon project'}". 
+Extract core themes, suggest a modern tech stack suitable for our project, list 3 potential technical roadblocks, and outline a high-level solution architecture.
+\nTitle: ${problem.title}\nDescription: ${problem.description}`;
             const res = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: prompt })
+                body: JSON.stringify({ message: prompt, context: JSON.stringify({ teamName: team.name, projectName: team.projectName }) })
             });
             if (res.ok) {
                 const data = await res.json();
@@ -1968,6 +1972,13 @@ function LLMModule({ team }: { team: any }) {
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    };
 
     useEffect(() => {
         try {
@@ -1976,11 +1987,17 @@ function LLMModule({ team }: { team: any }) {
                 const parsed = JSON.parse(saved);
                 setSessions(parsed);
                 if (parsed.length > 0) setCurrentSessionId(parsed[0].id);
+            } else if (sessions.length === 0) {
+                createNewChat();
             }
         } catch (e) {
             console.error(e);
         }
     }, [team.id]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [sessions, currentSessionId, isLoading]);
 
     useEffect(() => {
         if (sessions.length > 0) {
@@ -2051,14 +2068,25 @@ function LLMModule({ team }: { team: any }) {
             const res = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: textToSend, context: JSON.stringify(team) })
+                body: JSON.stringify({
+                    message: textToSend,
+                    history: messages,
+                    context: JSON.stringify({
+                        teamName: team.name,
+                        projectName: team.projectName,
+                        tasks: team.tasks?.map((t: any) => ({ title: t.title, status: t.status })),
+                        notes: team.notes?.map((n: any) => ({ title: n.title })),
+                        problemStatements: team.problemStatements?.map((p: any) => ({ title: p.title })),
+                        members: team.members?.map((m: any) => ({ name: m.user?.name, role: m.role }))
+                    })
+                })
             });
             if (!res.ok) throw new Error("Failed to get response");
             const data = await res.json();
             updateCurrentSession([...updatedMessages, { role: 'assistant', content: data.text }]);
         } catch (error) {
             console.error(error);
-            updateCurrentSession([...updatedMessages, { role: 'assistant', content: "Sorry, an error occurred." }]);
+            updateCurrentSession([...updatedMessages, { role: 'assistant', content: "⚠️ Sorry, an error occurred while connecting to the AI co-pilot." }]);
         } finally {
             setIsLoading(false);
         }
@@ -2108,14 +2136,17 @@ function LLMModule({ team }: { team: any }) {
                 </div>
 
                 {/* Main Chat Area */}
-                <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col relative overflow-hidden h-full">
-                    <div className="flex-1 overflow-y-auto space-y-6 mb-4 scrollbar-hide pr-2">
+                <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col relative overflow-hidden h-full shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
+                    <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-6 mb-4 scrollbar-hide pr-2 scroll-smooth">
                         {messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-center space-y-8 max-w-lg mx-auto">
                                 <div className="space-y-4">
+                                    <div className="w-16 h-16 rounded-3xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-6">
+                                        <Bot className="w-8 h-8 text-violet-400" />
+                                    </div>
                                     <h3 className="text-3xl font-semibold text-white tracking-tight">How can I assist your team today?</h3>
                                     <p className="text-zinc-500 text-sm leading-relaxed max-w-sm mx-auto">
-                                        I have been trained with high-detail extraction models to provide deep project context and technical precision.
+                                        I am specialized in deep workspace analysis and technical cross-referencing.
                                     </p>
                                 </div>
 
@@ -2136,13 +2167,13 @@ function LLMModule({ team }: { team: any }) {
                             </div>
                         ) : (
                             messages.map((m, i) => (
-                                <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user'
-                                        ? 'bg-violet-600 text-white rounded-tr-none shadow-[0_0_20px_rgba(139,92,246,0.3)]'
-                                        : 'bg-black/40 border border-[#27272a] text-zinc-300 rounded-tl-none'
+                                <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                                    <div className={`max-w-[85%] p-5 rounded-3xl ${m.role === 'user'
+                                        ? 'bg-violet-600 text-white rounded-tr-none shadow-[0_10px_40px_rgba(139,92,246,0.3)]'
+                                        : 'bg-black/40 border border-[#27272a] text-zinc-300 rounded-tl-none backdrop-blur-md'
                                         }`}>
-                                        <div className="prose prose-invert prose-sm max-w-none">
-                                            <ReactMarkdown>
+                                        <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/5 prose-code:text-violet-300">
+                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
                                                 {m.content}
                                             </ReactMarkdown>
                                         </div>
@@ -2151,9 +2182,13 @@ function LLMModule({ team }: { team: any }) {
                             ))
                         )}
                         {isLoading && (
-                            <div className="flex justify-start">
-                                <div className="bg-black/40 border border-[#27272a] p-4 rounded-2xl rounded-tl-none">
-                                    <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
+                            <div className="flex justify-start animate-pulse">
+                                <div className="bg-black/40 border border-[#27272a] p-5 rounded-3xl rounded-tl-none">
+                                    <div className="flex gap-2">
+                                        <div className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                        <div className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                        <div className="w-1.5 h-1.5 bg-violet-300 rounded-full animate-bounce" />
+                                    </div>
                                 </div>
                             </div>
                         )}

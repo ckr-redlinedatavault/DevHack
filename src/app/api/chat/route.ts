@@ -12,17 +12,30 @@ const model = genAI.getGenerativeModel({
 
 export async function POST(req: Request) {
     try {
-        const { message, context } = await req.json();
+        const { message, history, context } = await req.json();
 
         if (!message) {
             return NextResponse.json({ error: "Message is required" }, { status: 400 });
         }
 
+        // Prepare the chat sessions history
+        // Gemini SDK expects history as [{ role: 'user'|'model', parts: [{ text: string }] }]
+        const formattedHistory = (history || []).map((msg: any) => ({
+            role: msg.role === 'user' ? 'user' : 'model',
+            parts: [{ text: msg.content }]
+        }));
+
+        const chat = model.startChat({
+            history: formattedHistory,
+        });
+
+        // We include context in the user message if it's the start or if it changed, 
+        // but for simplicity here we prepend it to the current message to ensure the model stays grounded.
         const prompt = context
-            ? `WORKSPACE STATE CONTEXT (JSON of current project team, tasks, notes, members, problem statements, submission):\n${context}\n\nUSER PROMPT: ${message}`
+            ? `[WORKSPACE CONTEXT]: ${context}\n\n[USER]: ${message}`
             : message;
 
-        const result = await model.generateContent(prompt);
+        const result = await chat.sendMessage(prompt);
         const response = await result.response;
         const text = response.text();
 
