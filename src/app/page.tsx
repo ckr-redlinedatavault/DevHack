@@ -51,13 +51,13 @@ export default function LandingPage() {
           {/* Hero Typography - Pure Solid Colors */}
           <div className="space-y-5">
             <h1 className="text-[3.5rem] md:text-[5.5rem] lg:text-[6.5rem] font-light tracking-tighter leading-[0.95] text-white">
-              Build the <br />
-              <span className="text-zinc-600">
-                unbuildable.
+              The platform for <br />
+              <span className="text-[#4f46e5] font-normal">
+                elite hackathons.
               </span>
             </h1>
             <p className="max-w-md text-sm md:text-base text-zinc-500 font-light leading-relaxed tracking-wide">
-              The high-performance workspace for elite hackathon teams. Precision engineered for absolute speed.
+              Intelligence-driven workspace for participants. Comprehensive control center for organizers. Absolute speed for everyone.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export default function LandingPage() {
               href="/dashboard"
               className="w-full sm:w-auto px-8 py-3.5 bg-white text-black font-medium text-xs md:text-sm rounded-full hover:bg-zinc-200 transition-colors flex items-center justify-center gap-3 group"
             >
-              Start Mission
+              Start Building
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
             </Link>
             <Link
