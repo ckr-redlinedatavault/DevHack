@@ -57,8 +57,11 @@ export default function LandingPage() {
       </header>
 
       {/* 2. Surgical Main Content - Centered & Highlighted */}
-      <main className="flex-1 relative flex flex-col justify-center items-center px-6 md:px-12 w-full max-w-[90rem] mx-auto z-10 py-20 text-center">
-        <div className="space-y-12 w-full max-w-4xl flex flex-col items-center">
+      <main className="flex-1 relative flex flex-col justify-center items-center px-6 md:px-12 w-full max-w-[90rem] mx-auto z-10 py-16 text-center">
+        <div className="relative w-full max-w-5xl flex flex-col items-center p-12 md:p-24 rounded-[3rem] bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] backdrop-blur-[2px] space-y-12 shadow-2xl overflow-hidden group/hero">
+          {/* Subtle Inner Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#4f46e5]/20 to-transparent" />
+          <div className="absolute inset-0 bg-blue-500/[0.01] pointer-events-none" />
 
           {/* Status Message Highlight */}
           <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5]/5 border border-[#4f46e5]/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-1000">
