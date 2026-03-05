@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, ArrowLeft, Rocket, Users, Trophy, ClipboardList, Send, ArrowRight, Zap, Target } from "lucide-react";
+import { Loader2, ArrowLeft, Rocket, Users, Trophy, ClipboardList, Send, ArrowRight, Zap, Target, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,143 +47,186 @@ export default function CreateTeamPage() {
 
 
     return (
-        <div className="min-h-screen bg-black text-white p-6 md:p-12 selection:bg-rose-500/30 relative overflow-hidden">
+        <div className="min-h-screen bg-[#050505] text-white p-6 md:p-12 selection:bg-[#4f46e5]/30 relative overflow-hidden flex flex-col font-sans">
             {/* Logo at top left */}
             <div className="absolute top-10 left-10 z-50">
                 <Link href="/" className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 bg-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20 group-hover:scale-105 transition-all">
-                        <Zap className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="text-white font-bold text-xl tracking-tighter">DevHack</span>
+                    <img
+                        src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
+                        alt="DevHack Logo"
+                        className="h-10 w-auto object-contain brightness-125 group-hover:scale-105 transition-all duration-500"
+                    />
                 </Link>
             </div>
 
-            <div className="max-w-4xl mx-auto space-y-12 relative">
-                <nav className="flex items-center space-x-3 text-xs font-bold text-zinc-600 mb-10 pt-10">
-                    <Link href="/onboarding" className="hover:text-rose-500 transition-colors flex items-center gap-1">
-                        <ArrowLeft className="w-3.5 h-3.5" /> Back to Choice
+            {/* Ambient Background Glows */}
+            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#4f46e5]/5 blur-[160px] rounded-full -z-10 animate-pulse transition-all duration-1000" />
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#4f46e5]/3 blur-[140px] rounded-full -z-10" />
+
+            <div className="max-w-5xl mx-auto w-full space-y-12 relative z-10 pt-20">
+                <nav className="flex items-center space-x-3 text-xs font-bold text-zinc-600 mb-10">
+                    <Link href="/onboarding" className="hover:text-white transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/5">
+                        <ArrowLeft className="w-3 h-3" /> Back
                     </Link>
                     <span className="text-zinc-800">/</span>
-                    <span className="text-rose-500">Workspace Build</span>
+                    <span className="text-[#4f46e5] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-[#4f46e5]/10 border border-[#4f46e5]/20">Workspace Build</span>
                 </nav>
 
-                <div className="space-y-4">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">Start your build.</h1>
-                    <p className="text-zinc-500 text-lg font-medium leading-relaxed max-w-xl italic">Ready to transform your mission registration into a production-ready workspace.</p>
+                <div className="space-y-4 max-w-2xl">
+                    <div className="inline-flex py-1.5 px-4 rounded-full bg-[#4f46e5]/10 border border-[#4f46e5]/20 text-[#4f46e5] text-[10px] font-black uppercase tracking-[0.2em] mb-2">
+                        Operation Initialize
+                    </div>
+                    <h1 className="text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.1]">Initiate your mission.</h1>
+                    <p className="text-zinc-500 text-lg font-medium leading-relaxed max-w-xl">
+                        Provision your production environment and establish your team's command center.
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-4">
                     <div className="lg:col-span-2">
-                        <div className="bg-zinc-950/40 border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl backdrop-blur-sm">
-                            <form onSubmit={handleSubmit} className="flex flex-col">
-                                <div className="p-10 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
-                                    <h2 className="text-xl text-white font-bold tracking-tight">Project Identity</h2>
-                                    <p className="text-zinc-500 text-sm font-medium mt-1 opacity-70">Define the core metadata for your hackathon journey.</p>
+                        <div className="bg-[#121214] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-black relative group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#4f46e5]/0 via-[#4f46e5]/0 to-[#4f46e5]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+                            <form onSubmit={handleSubmit} className="flex flex-col relative z-20">
+                                <div className="p-10 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent flex items-center gap-6">
+                                    <div className="w-14 h-14 rounded-2xl bg-[#4f46e5]/10 border border-[#4f46e5]/20 flex items-center justify-center">
+                                        <Target className="w-6 h-6 text-[#4f46e5]" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl text-white font-bold tracking-tight">Identity Profile</h2>
+                                        <p className="text-zinc-500 text-sm font-medium mt-0.5">Core registry for your hackathon deployment.</p>
+                                    </div>
                                 </div>
-                                <div className="p-10 space-y-8">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                                <div className="p-10 space-y-10">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                         <div className="space-y-3">
-                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
-                                                <Users className="w-4 h-4 text-rose-500" /> Team name
+                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                                <Users className="w-3.5 h-3.5 text-[#4f46e5]" /> Team name
                                             </label>
                                             <Input
                                                 name="teamName"
-                                                placeholder="Quantum Hack"
+                                                placeholder="e.g. Cyber Squad"
                                                 required
-                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
                                             />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
-                                                <Target className="w-4 h-4 text-rose-500" /> Project Title
+                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                                <Rocket className="w-3.5 h-3.5 text-[#4f46e5]" /> Project Title
                                             </label>
                                             <Input
                                                 name="projectName"
-                                                placeholder="My Innovation"
+                                                placeholder="e.g. Quantum Neural Bridge"
                                                 required
-                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                         <div className="space-y-3">
-                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
-                                                <Rocket className="w-4 h-4 text-white opacity-40" /> Hackathon target
+                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                                <Trophy className="w-3.5 h-3.5 text-zinc-600" /> Target Event
                                             </label>
                                             <Input
                                                 name="hackathonName"
-                                                placeholder="Summit Event 2026"
+                                                placeholder="e.g. Eth Global 2026"
                                                 required
-                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
                                             />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
-                                                <Users className="w-4 h-4 text-white opacity-40" /> Team size
+                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                                <Users className="w-3.5 h-3.5 text-zinc-600" /> Squad capacity
                                             </label>
                                             <Input
                                                 name="teamSize"
                                                 type="number"
                                                 placeholder="4"
                                                 required
-                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
+                                                min="1"
+                                                max="10"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="space-y-3">
-                                        <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
-                                            <ClipboardList className="w-4 h-4 text-rose-500" /> Executive summary
+                                        <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                            <ClipboardList className="w-3.5 h-3.5 text-[#4f46e5]" /> Mission Statement
                                         </label>
                                         <Textarea
                                             name="description"
-                                            placeholder="What are we solving today?"
-                                            className="bg-black border-white/5 min-h-[140px] focus:border-rose-500/50 text-white rounded-3xl p-5 placeholder:text-zinc-800 transition-all font-medium text-sm leading-relaxed resize-y"
+                                            placeholder="Outline your project vision and technical objectives..."
+                                            className="bg-black border-white/5 min-h-[160px] focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-[2rem] p-8 placeholder:text-zinc-800 transition-all font-medium text-sm leading-relaxed resize-none shadow-inner"
                                         />
                                     </div>
                                 </div>
-                                <div className="p-8 bg-black/40 border-t border-white/5 flex justify-end gap-4 mt-auto">
+
+                                <div className="p-8 bg-black/20 border-t border-white/5 flex justify-end gap-4 mt-auto">
+                                    <Link href="/onboarding" className="px-8 flex items-center text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
+                                        Cancel
+                                    </Link>
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="bg-white text-black hover:bg-rose-500 hover:text-white px-10 h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 disabled:opacity-50 shadow-xl"
+                                        className="bg-white text-black hover:bg-[#4f46e5] hover:text-white px-12 h-16 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center gap-3 disabled:opacity-50 shadow-2xl shadow-indigo-500/10 group/btn"
                                     >
-                                        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-4 h-4" /> Initialize Workspace</>}
+                                        {isLoading ? (
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                        ) : (
+                                            <>
+                                                Initialize Hub
+                                                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform" />
+                                            </>
+                                        )}
                                     </Button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
-                    <div className="space-y-8">
-                        <div className="p-10 rounded-[2.5rem] bg-zinc-950/40 border border-white/5 space-y-6 shadow-xl relative overflow-hidden group backdrop-blur-sm">
-                            <div className="absolute inset-0 bg-gradient-to-br from-rose-500/0 via-rose-500/0 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <h3 className="text-lg font-bold text-white tracking-tight relative z-10 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center">
-                                    <Users className="w-5 h-5 text-rose-500" />
-                                </div>
-                                Setup kit
+                    <div className="space-y-6">
+                        <div className="p-10 rounded-[2.5rem] bg-[#121214] border border-white/5 space-y-8 shadow-xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#4f46e5]/5 blur-3xl -z-0" />
+
+                            <h3 className="text-xl font-bold text-white tracking-tight relative z-10 flex items-center gap-4">
+                                <span className="w-1.5 h-6 bg-[#4f46e5] rounded-full" />
+                                Hub Provisions
                             </h3>
-                            <ul className="space-y-5 text-zinc-500 text-sm font-medium relative z-10">
-                                <li className="flex items-start gap-4">
-                                    <div className="w-6 h-6 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-zinc-600">01</div>
-                                    <span className="leading-relaxed">Team lead permission initialized internally.</span>
-                                </li>
-                                <li className="flex items-start gap-4">
-                                    <div className="w-6 h-6 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-zinc-600">02</div>
-                                    <span className="leading-relaxed">Automated invite link generated upon save.</span>
-                                </li>
-                                <li className="flex items-start gap-4">
-                                    <div className="w-6 h-6 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-zinc-600">03</div>
-                                    <span className="leading-relaxed">Sync with mission rankings starts immediately.</span>
-                                </li>
-                            </ul>
+
+                            <div className="space-y-8 relative z-10">
+                                <div className="flex gap-5 group/item">
+                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-black text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">01</div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-bold text-white">Lead Credentials</p>
+                                        <p className="text-xs text-zinc-500 leading-relaxed font-medium">Automatic assignment of lead status and admin privileges.</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-5 group/item">
+                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-black text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">02</div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-bold text-white">Invite Relay</p>
+                                        <p className="text-xs text-zinc-500 leading-relaxed font-medium">Unique cryptographic invite code generated for squad sync.</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-5 group/item">
+                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-black text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">03</div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-bold text-white">Live Telemetry</p>
+                                        <p className="text-xs text-zinc-500 leading-relaxed font-medium">Instant connection to global event rankings and dashboard.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="p-10 rounded-[2.5rem] border border-white/5 space-y-4 bg-transparent hover:bg-zinc-900/40 transition-colors duration-500 group">
-                            <h3 className="text-lg font-bold text-white tracking-tight group-hover:text-rose-500 transition-colors">Launch guide</h3>
-                            <p className="text-zinc-500 text-sm font-medium leading-relaxed">Ensure your team name matches your event registration for live leaderboard telemetry.</p>
+                        <div className="p-10 rounded-[2.5rem] bg-gradient-to-br from-zinc-900/50 to-black border border-white/5 space-y-4 relative group">
+                            <Sparkles className="absolute top-8 right-8 w-5 h-5 text-[#4f46e5] opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                            <h3 className="text-lg font-bold text-white tracking-tight">Pro Tip</h3>
+                            <p className="text-zinc-500 text-sm font-medium leading-relaxed italic border-l-2 border-[#4f46e5]/30 pl-4">
+                                "Synchronizing your team name with your registration ensures seamless telemetry sync."
+                            </p>
                         </div>
                     </div>
                 </div>
