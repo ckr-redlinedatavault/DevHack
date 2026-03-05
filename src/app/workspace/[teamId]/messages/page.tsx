@@ -31,7 +31,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-let socket: Socket;
 
 export default function MessagesPage({ params: paramsPromise }: { params: Promise<{ teamId: string }> }) {
     const params = use(paramsPromise);
@@ -80,27 +79,51 @@ export default function MessagesPage({ params: paramsPromise }: { params: Promis
         fetchMessages();
     }, [teamId]);
 
+    const [isConnected, setIsConnected] = useState(false);
+    const socketRef = useRef<Socket | null>(null);
+
     // Socket.io Implementation
     useEffect(() => {
         // Initialize socket
-        socket = io(typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
-
-        socket.on("connect", () => {
-            console.log("Connected to Realtime Engine:", socket.id);
-            socket.emit("join-workspace", teamId);
+        const siteOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+        const socketInstance = io(siteOrigin, {
+            reconnectionAttempts: 5,
+            reconnectionDelay: 2000,
         });
 
-        socket.on("receive-message", (data) => {
-            // Only add if it's not from us (our UI already has it for immediate feedback, or we can rely solely on socket)
+        socketRef.current = socketInstance;
+
+        socketInstance.on("connect", () => {
+            console.log("[Socket] Linked to Messaging Engine:", socketInstance.id);
+            socketInstance.emit("join-workspace", teamId);
+            setIsConnected(true);
+        });
+
+        socketInstance.on("receive-message", (data) => {
+            console.log("[Socket] Incoming message packet received");
             setMessages((prev) => {
-                // Check if message already exists by ID to avoid duplicates
+                // Double check for duplicates (IDs are unique from API)
                 if (prev.some(m => m.id === data.id)) return prev;
                 return [...prev, data];
             });
         });
 
+        socketInstance.on("disconnect", () => {
+            console.log("[Socket] Session terminated");
+            setIsConnected(false);
+        });
+
+        // Ping check to keep alive
+        const pingInterval = setInterval(() => {
+            if (socketInstance.connected) {
+                socketInstance.emit("ping-check");
+            }
+        }, 30000);
+
         return () => {
-            socket.disconnect();
+            clearInterval(pingInterval);
+            socketInstance.disconnect();
+            socketRef.current = null;
         };
     }, [teamId]);
 
@@ -134,10 +157,12 @@ export default function MessagesPage({ params: paramsPromise }: { params: Promis
                 setMessages(prev => [...prev, sentMsg]);
 
                 // 3. Emit to Team Members via Socket
-                socket.emit("send-message", {
-                    ...sentMsg,
-                    teamId // Ensure socket server knows where to broadcast
-                });
+                if (socketRef.current) {
+                    socketRef.current.emit("send-message", {
+                        ...sentMsg,
+                        teamId // Routing header
+                    });
+                }
             } else {
                 setNewMessage(content); // Restore if failed
             }
@@ -281,8 +306,8 @@ export default function MessagesPage({ params: paramsPromise }: { params: Promis
                                 <div>
                                     <h3 className="text-sm font-bold text-white uppercase tracking-widest">Messaging Engine</h3>
                                     <p className="text-[10px] text-zinc-500 font-medium flex items-center gap-2 mt-1">
-                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                                        Connected to Workspace Network
+                                        <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-rose-500'} animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]`} />
+                                        {isConnected ? 'Connected to Workspace Network' : 'Reconnecting to Secure Link...'}
                                     </p>
                                 </div>
                             </div>
@@ -332,8 +357,8 @@ export default function MessagesPage({ params: paramsPromise }: { params: Promis
                                                         <span className="text-[8px] font-bold text-zinc-700 uppercase">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                     </div>
                                                     <div className={`px-6 py-4 rounded-[2rem] text-[15px] leading-relaxed tracking-tight ${isOwn
-                                                            ? 'bg-[#4f46e5] text-white rounded-tr-none shadow-[0_10px_30px_rgba(79,70,229,0.3)]'
-                                                            : 'bg-[#121214] border border-white/5 text-zinc-200 rounded-tl-none'
+                                                        ? 'bg-[#4f46e5] text-white rounded-tr-none shadow-[0_10px_30px_rgba(79,70,229,0.3)]'
+                                                        : 'bg-[#121214] border border-white/5 text-zinc-200 rounded-tl-none'
                                                         }`}>
                                                         {msg.content}
                                                     </div>
