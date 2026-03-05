@@ -35,7 +35,9 @@ export default function OrganizerCommitsPage() {
                 setEventName(evData.name);
 
                 // Fetch the event's commit updates
-                const res = await fetch(`/api/organizer/events/${eventId}/commits`);
+                const res = await fetch(`/api/organizer/events/${eventId}/commits`, {
+                    cache: 'no-store'
+                });
                 if (!res.ok) throw new Error("Failed to load team updates");
                 const data = await res.json();
                 setUpdates(data.updates || []);
