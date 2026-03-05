@@ -111,19 +111,19 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-start text-left space-y-6 animate-in fade-in slide-in-from-left-8 duration-1000">
 
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5] border border-[#4f46e5]/20 shadow-[0_0_20px_rgba(79,70,229,0.2)]">
+            <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#4f46e5] border border-[#4f46e5]/20 shadow-[0_0_20px_rgba(79,70,229,0.2)]">
               <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-              <span className="text-[10px] font-bold text-white">Live Status</span>
+              <span className="text-[10px] font-bold text-white tracking-tight">Live Status</span>
               <div className="w-px h-3 bg-white/20" />
-              <span className="text-[10px] font-medium text-white/90">System was set for the Beta leveled Tester instance</span>
+              <span className="text-[10px] font-medium text-white/90">System: Beta instance operational</span>
             </div>
 
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-medium tracking-tighter leading-[0.9] text-white">
+            <div className="space-y-3">
+              <h1 className="text-3xl md:text-4xl lg:text-6xl font-medium tracking-tighter leading-[0.9] text-white">
                 Build <br />
                 <span className="text-[#4f46e5]">Beyond</span> Limits.
               </h1>
-              <p className="max-w-md text-xs md:text-sm text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80">
+              <p className="max-w-sm text-[11px] md:text-xs text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80">
                 DevHack is the surgical-grade workspace for the next generation of builders. Engineered for absolute speed, precision, and collaborative excellence.
               </p>
             </div>
@@ -131,7 +131,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-full">
               <Link
                 href="/dashboard"
-                className="group flex items-center justify-between p-5 bg-[#0c0c0c] border border-white/15 rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+                className="group flex items-center justify-between p-4 bg-[#0c0c0c] border border-white/15 rounded-xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
               >
                 <div className="flex items-center gap-4">
                   <div className="p-2.5 bg-[#4f46e5] rounded-xl text-white transition-all duration-500 shadow-[0_0_15px_rgba(79,70,229,0.2)]">
@@ -147,7 +147,7 @@ export default function LandingPage() {
 
               <Link
                 href="/join-team-preview"
-                className="group flex items-center justify-between p-5 bg-[#0c0c0c] border border-white/15 rounded-2xl hover:border-emerald-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+                className="group flex items-center justify-between p-4 bg-[#0c0c0c] border border-white/15 rounded-xl hover:border-emerald-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
               >
                 <div className="flex items-center gap-4">
                   <div className="p-2.5 bg-emerald-600 rounded-xl text-white transition-all duration-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
@@ -163,7 +163,7 @@ export default function LandingPage() {
 
               <Link
                 href="/organizer/login"
-                className="group flex items-center justify-between p-5 bg-[#0c0c0c] border border-white/15 rounded-2xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+                className="group flex items-center justify-between p-4 bg-[#0c0c0c] border border-white/15 rounded-xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
               >
                 <div className="flex items-center gap-4">
                   <div className="p-2.5 bg-rose-600 rounded-xl text-white transition-all duration-500 shadow-[0_0_15px_rgba(225,29,72,0.2)]">
@@ -184,7 +184,7 @@ export default function LandingPage() {
             <img
               src="https://ik.imagekit.io/dypkhqxip/Breaking%20barriers-bro.svg"
               alt="Build Illustration"
-              className="relative z-10 w-full h-auto max-w-[280px] md:max-w-md lg:max-w-xl object-contain drop-shadow-[0_0_50px_rgba(79,70,229,0.15)] transition-transform duration-700 hover:scale-[1.02]"
+              className="relative z-10 w-full h-auto max-w-[240px] md:max-w-sm lg:max-w-lg object-contain drop-shadow-[0_0_50px_rgba(79,70,229,0.15)] transition-transform duration-700 hover:scale-[1.02]"
             />
           </div>
 
