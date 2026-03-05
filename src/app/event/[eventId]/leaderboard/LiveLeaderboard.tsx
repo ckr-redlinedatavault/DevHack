@@ -64,7 +64,7 @@ export default function LiveLeaderboard({ eventId }: { eventId: string }) {
 
     if (leaderboard.length === 0) {
         return (
-            <div className="bg-[#121214] border border-white/5 rounded-3xl p-12 text-center text-zinc-500 font-medium shadow-2xl">
+            <div className="bg-[#0a0a0a] border border-[#27272a] rounded-2xl p-8 text-center text-zinc-500 text-sm font-medium">
                 No active teams on the leaderboard yet.
             </div>
         );
@@ -73,76 +73,87 @@ export default function LiveLeaderboard({ eventId }: { eventId: string }) {
     const isJudging = status === "JUDGING" || status === "ENDED";
 
     return (
-        <div className="bg-[#121214] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-            <div className="p-6 md:p-8 flex items-center justify-between border-b border-white/5 bg-black/40">
-                <div className="space-y-1">
-                    <h3 className="text-2xl font-bold flex items-center gap-3 text-white">
-                        <Trophy className="w-6 h-6 text-amber-500" /> Event Leaderboard
+        <div className="bg-[#0a0a0a] border border-[#27272a] rounded-2xl overflow-hidden font-sans">
+            <div className="p-4 md:p-5 flex items-center justify-between border-b border-[#27272a] bg-[#050505]">
+                <div className="space-y-0.5">
+                    <h3 className="text-sm font-semibold flex items-center gap-2 text-white">
+                        <Trophy className="w-4 h-4 text-zinc-400" /> Live Rankings
                     </h3>
-                    <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">
-                        Scoring Mode: {isJudging ? "Judicial Evaluation Average" : "Real-time Task Completion"}
+                    <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider">
+                        {isJudging ? "Judicial Evaluation Average" : "Real-time Task Completion"}
                     </p>
                 </div>
-                <div className="flex items-center gap-2 text-sm font-bold text-indigo-400 bg-indigo-500/10 px-4 py-2 rounded-full shadow-[0_0_15px_rgba(99,102,241,0.2)]">
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 absolute"></span>
-                    <span className="ml-2 pl-2 border-l border-indigo-500/30">Live Syncing</span>
+                <div className="flex items-center gap-2 text-[10px] font-semibold text-[#4f46e5] bg-[#4f46e5]/10 px-3 py-1.5 rounded-full border border-[#4f46e5]/20 uppercase tracking-widest">
+                    <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4f46e5] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4f46e5]"></span>
+                    </span>
+                    Live Sync
                 </div>
             </div>
 
-            <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-black/20 text-xs uppercase tracking-widest text-zinc-500">
-                            <th className="px-6 py-5 font-bold">Rank</th>
-                            <th className="px-6 py-5 font-bold">Team Name</th>
-                            <th className="px-6 py-5 font-bold">
-                                {isJudging ? "Jury Score" : "Task Score"}
-                            </th>
-                            <th className="px-6 py-5 font-bold">Development Progress</th>
-                            <th className="px-6 py-5 font-bold">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5 text-sm font-medium">
-                        {leaderboard.map((team) => (
-                            <tr key={team.id} className="hover:bg-white/[0.02] transition-colors group">
-                                <td className="px-6 py-6">
-                                    <div className="flex items-center gap-3">
-                                        {team.rank === 1 && <Medal className="w-6 h-6 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]" />}
-                                        {team.rank === 2 && <Medal className="w-6 h-6 text-zinc-300 drop-shadow-[0_0_8px_rgba(212,212,216,0.3)]" />}
-                                        {team.rank === 3 && <Medal className="w-6 h-6 text-amber-700" />}
-                                        <span className={`font-black text-xl ${team.rank <= 3 ? 'text-white' : 'text-zinc-600'}`}>
-                                            #{team.rank}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-6 font-bold text-lg text-white">{team.teamName}</td>
-                                <td className="px-6 py-6">
-                                    <span className={`px-4 py-2 rounded-xl border font-mono font-black text-xs uppercase tracking-widest inline-flex items-center gap-2 ${isJudging
-                                            ? "bg-sky-500/10 border-sky-500/20 text-sky-400"
-                                            : "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
-                                        }`}>
-                                        {isJudging ? team.judgeScore.toFixed(2) : team.dynamicScore} PTS
-                                    </span>
-                                </td>
-                                <td className="px-6 py-6 text-zinc-400 font-bold">
-                                    {team.tasksCompleted} Tasks Complete
-                                </td>
-                                <td className="px-6 py-6">
-                                    {team.hasSubmission ? (
-                                        <div className="flex items-center gap-2 text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-xl w-fit border border-emerald-500/20 text-[10px] uppercase tracking-widest leading-none">
-                                            <CheckCircle2 className="w-3.5 h-3.5" /> Project Sent
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center gap-2 text-zinc-500 font-bold px-3 py-1.5 rounded-xl w-fit text-[10px] uppercase tracking-widest leading-none">
-                                            <CircleDashed className="w-3.5 h-3.5 animate-spin-slow" /> Building
-                                        </div>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="p-4 flex flex-col gap-2">
+                {/* Header Row */}
+                <div className="grid grid-cols-12 gap-4 px-4 py-2 text-[10px] font-semibold text-zinc-500 uppercase tracking-widest border-b border-[#27272a] mb-2">
+                    <div className="col-span-1 text-center">Rank</div>
+                    <div className="col-span-4">Team</div>
+                    <div className="col-span-2 text-center">{isJudging ? "Jury Score" : "Score"}</div>
+                    <div className="col-span-3 text-center">Progress</div>
+                    <div className="col-span-2 text-right">Status</div>
+                </div>
+
+                {/* Team Rows */}
+                {leaderboard.map((team) => (
+                    <div key={team.id} className="grid grid-cols-12 gap-4 px-4 py-3 items-center bg-[#0d0d0d] hover:bg-[#121214] border border-[#27272a] hover:border-[#4f46e5]/40 rounded-xl transition-all group group-hover:shadow-[0_0_10px_rgba(79,70,229,0.1)]">
+                        {/* Rank */}
+                        <div className="col-span-1 flex justify-center items-center">
+                            {team.rank === 1 ? (
+                                <Medal className="w-4 h-4 text-yellow-500" />
+                            ) : team.rank === 2 ? (
+                                <Medal className="w-4 h-4 text-zinc-300" />
+                            ) : team.rank === 3 ? (
+                                <Medal className="w-4 h-4 text-amber-700" />
+                            ) : (
+                                <span className="text-xs font-semibold text-zinc-600">
+                                    {team.rank}
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Team Name */}
+                        <div className="col-span-4 font-semibold text-sm text-zinc-100 group-hover:text-white transition-colors truncate pr-2">
+                            {team.teamName}
+                        </div>
+
+                        {/* Score */}
+                        <div className="col-span-2 flex justify-center">
+                            <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border inline-flex ${isJudging
+                                ? "bg-zinc-800 border-zinc-700 text-zinc-300"
+                                : "bg-[#4f46e5]/10 border-[#4f46e5]/20 text-[#4f46e5]"
+                                }`}>
+                                {isJudging ? team.judgeScore.toFixed(2) : team.dynamicScore} PTS
+                            </span>
+                        </div>
+
+                        {/* Progress */}
+                        <div className="col-span-3 flex justify-center text-xs font-medium text-zinc-400">
+                            {team.tasksCompleted} Tasks
+                        </div>
+
+                        {/* Status */}
+                        <div className="col-span-2 flex justify-end">
+                            {team.hasSubmission ? (
+                                <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider border border-emerald-500/20">
+                                    <CheckCircle2 className="w-3 h-3" /> Sent
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-1.5 text-zinc-500 bg-zinc-900 border border-[#27272a] px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider">
+                                    <CircleDashed className="w-3 h-3 animate-spin-slow" /> Dev
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );
