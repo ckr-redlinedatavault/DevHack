@@ -7,20 +7,27 @@ export async function GET(
     { params }: { params: Promise<{ inviteCode: string }> }
 ) {
     try {
-        const { inviteCode } = await params;
+        const { inviteCode: rawInviteCode } = await params;
+        const inviteCode = rawInviteCode.toUpperCase();
         const userId = await getUserId();
+
+        // Build select object properly
+        const select: any = {
+            id: true,
+            name: true,
+            projectName: true,
+        };
+
+        if (userId) {
+            select.members = {
+                where: { userId },
+                select: { id: true }
+            };
+        }
 
         const team = await prisma.team.findUnique({
             where: { inviteCode },
-            select: {
-                id: true,
-                name: true,
-                projectName: true,
-                members: userId ? {
-                    where: { userId },
-                    select: { id: true }
-                } : false
-            }
+            select
         });
 
         if (!team) {
@@ -30,7 +37,7 @@ export async function GET(
             );
         }
 
-        const alreadyMember = (team.members as any[])?.length > 0;
+        const alreadyMember = userId ? ((team.members as any[])?.length > 0) : false;
 
         return NextResponse.json({
             id: team.id,
@@ -53,7 +60,8 @@ export async function POST(
     { params }: { params: Promise<{ inviteCode: string }> }
 ) {
     try {
-        const { inviteCode } = await params;
+        const { inviteCode: rawInviteCode } = await params;
+        const inviteCode = rawInviteCode.toUpperCase();
 
         // Get userId from cookie session (not from request body)
         const userId = await getUserId();

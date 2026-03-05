@@ -19,7 +19,7 @@ export default function JoinTeamPreviewPage() {
         }
 
         if (code) {
-            router.push(`/join/${code}`);
+            router.push(`/join/${code.toUpperCase()}`);
         }
     };
 

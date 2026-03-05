@@ -82,9 +82,14 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
             });
 
             const data = await res.json();
+            console.log("Join API response:", res.status, data);
 
             if (res.ok) {
                 setStatus("requested");
+            } else if (res.status === 401) {
+                // Not logged in! Redirect to login with callback
+                const currentPath = window.location.pathname;
+                router.push(`/login?callbackUrl=${encodeURIComponent(currentPath)}`);
             } else if (res.status === 400 && data.message === "You are already a member of this team") {
                 setStatus("approved");
                 setTimeout(() => router.push(`/workspace/${teamInfo?.id}`), 1500);
