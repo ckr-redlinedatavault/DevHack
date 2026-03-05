@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Zap, Github, Terminal, Activity, Layers } from "lucide-react";
+import { ArrowRight, Zap, Github, Terminal, Activity, Layers, Users } from "lucide-react";
 import Image from "next/image";
 
 export default function LandingPage() {
@@ -62,47 +62,63 @@ export default function LandingPage() {
             <span className="text-[10px] font-medium text-zinc-300">System was set for the Beta leveled Tester instance</span>
           </div>
 
-          <div className="space-y-6">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter leading-[1.05] text-white animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter leading-[1.05] text-white animate-in fade-in slide-in-from-bottom-8 duration-700">
               Build <span className="text-[#4f46e5]">Beyond</span> Limits.
             </h1>
-            <p className="max-w-xl mx-auto text-sm md:text-base text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <p className="max-w-xl mx-auto text-xs md:text-sm text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               DevHack is the surgical-grade workspace for the next generation of builders. Engineered for absolute speed, precision, and collaborative excellence.
             </p>
           </div>
 
-          {/* Action Boxes - Solid Colors & Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
+          {/* Action Boxes - 3 Column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-4xl">
             <Link
               href="/dashboard"
-              className="group flex items-center justify-between p-7 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+              className="group flex items-center justify-between p-6 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
-              <div className="flex items-center gap-5">
-                <div className="p-3 bg-[#4f46e5]/10 rounded-xl group-hover:bg-[#4f46e5] group-hover:text-white transition-all duration-500 text-[#4f46e5]">
-                  <Terminal className="w-5 h-5" />
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 bg-[#4f46e5]/10 rounded-xl group-hover:bg-[#4f46e5] group-hover:text-white transition-all duration-500 text-[#4f46e5]">
+                  <Terminal className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-base font-medium text-white tracking-tight">Participate</h3>
-                  <p className="text-xs text-zinc-600 mt-1">Command center access</p>
+                  <h3 className="text-sm font-medium text-white tracking-tight">Participate</h3>
+                  <p className="text-[10px] text-zinc-600 mt-1">Command center</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-500 text-[#4f46e5]" />
+              <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-[#4f46e5]" />
+            </Link>
+
+            <Link
+              href="/join-team-preview"
+              className="group flex items-center justify-between p-6 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-emerald-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 bg-emerald-500/10 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 text-emerald-500">
+                  <Users className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-sm font-medium text-white tracking-tight">Join Team</h3>
+                  <p className="text-[10px] text-zinc-600 mt-1">Enter invite code</p>
+                </div>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-emerald-500" />
             </Link>
 
             <Link
               href="/organizer/login"
-              className="group flex items-center justify-between p-7 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+              className="group flex items-center justify-between p-6 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
-              <div className="flex items-center gap-5">
-                <div className="p-3 bg-rose-500/10 rounded-xl group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 text-rose-500">
-                  <Zap className="w-5 h-5" />
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 bg-rose-500/10 rounded-xl group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 text-rose-500">
+                  <Zap className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-base font-medium text-white tracking-tight">Organize</h3>
-                  <p className="text-xs text-zinc-600 mt-1">Manage event logistics</p>
+                  <h3 className="text-sm font-medium text-white tracking-tight">Organize</h3>
+                  <p className="text-[10px] text-zinc-600 mt-1">Event logistics</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-500 text-rose-500" />
+              <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-rose-500" />
             </Link>
           </div>
         </div>
