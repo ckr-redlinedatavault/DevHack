@@ -29,7 +29,7 @@ export default function LandingPage() {
             className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:scale-105 select-none"
           />
           <div className="hidden lg:flex h-4 w-px bg-black/10" />
-          <div className="hidden lg:flex items-center gap-5 text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
+          <div className="hidden lg:flex items-center gap-5 text-[10px] font-bold text-zinc-600">
             <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Operational</span>
             <span className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5 text-rose-600" /> <span className="text-rose-600 font-bold">Beta Build 2.4.0</span></span>
           </div>
@@ -42,19 +42,19 @@ export default function LandingPage() {
             className="flex items-center gap-2 px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 transition-all rounded-lg"
           >
             <Github className="w-4 h-4" />
-            <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">GitHub Repository</span>
+            <span className="text-[10px] font-bold hidden sm:inline">GitHub Repository</span>
           </Link>
 
           <Link
             href="/login"
-            className="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-[10px] font-bold transition-all uppercase tracking-widest rounded-lg"
+            className="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-[10px] font-bold transition-all rounded-lg"
           >
             Login
           </Link>
 
           <Link
             href="/register"
-            className="px-6 py-2.5 bg-[#4f46e5] text-white text-[10px] font-black rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 uppercase tracking-widest shadow-lg shadow-[#4f46e5]/20"
+            className="px-6 py-2.5 bg-[#4f46e5] text-white text-[10px] font-black rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 shadow-lg shadow-[#4f46e5]/20"
           >
             Join Mission
           </Link>
@@ -69,7 +69,7 @@ export default function LandingPage() {
 
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5] border border-[#4f46e5]/20 shadow-[0_0_20px_rgba(79,70,229,0.2)]">
               <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-              <span className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Live Status</span>
+              <span className="text-[10px] font-bold text-white">Live Status</span>
               <div className="w-px h-3 bg-white/20" />
               <span className="text-[10px] font-medium text-white/90">System was set for the Beta leveled Tester instance</span>
             </div>
