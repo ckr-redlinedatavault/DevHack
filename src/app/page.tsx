@@ -64,7 +64,7 @@ export default function LandingPage() {
 
           <div className="space-y-6">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter leading-[1.05] text-white animate-in fade-in slide-in-from-bottom-8 duration-700">
-              Build <span className="text-[#4f46e5] font-light italic">Beyond</span> Limits.
+              Build <span className="text-[#4f46e5]">Beyond</span> Limits.
             </h1>
             <p className="max-w-xl mx-auto text-sm md:text-base text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               DevHack is the surgical-grade workspace for the next generation of builders. Engineered for absolute speed, precision, and collaborative excellence.
