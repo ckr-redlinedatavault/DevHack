@@ -36,17 +36,31 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
       },
     });
 
+    // Verify transporter connection once
+    try {
+      console.log("[SMTP] Verifying Connection...");
+      await transporter.verify();
+      console.log("[SMTP] Connection Verified. Ready to send.");
+    } catch (verifyError: any) {
+      console.error("[SMTP] Connection Check Failed:", verifyError);
+      return NextResponse.json({ message: `SMTP Connection Error: ${verifyError.message}` }, { status: 500 });
+    }
+
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
     const liveEventUrl = `${baseUrl}/event/${eventId}/live`;
+
+    const invitationResults: string[] = [];
+    const errors: string[] = [];
 
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     for (const reg of event.registrations) {
-      const mailOptions = {
-        from: `"DevHack Organizer" <${process.env.GMAIL_USER}>`,
-        to: reg.leadEmail,
-        subject: `Approval Granted: Welcome to ${event.name}!`,
-        html: `
+      try {
+        const mailOptions = {
+          from: `"DevHack Organizer" <${process.env.GMAIL_USER}>`,
+          to: reg.leadEmail,
+          subject: `Approval Granted: Welcome to ${event.name}!`,
+          html: `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -106,21 +120,37 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
 </body>
 </html>
                 `,
-      };
+        };
 
-      await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
-      await prisma.eventRegistration.update({
-        where: { id: reg.id },
-        data: { status: "INVITED" },
-      });
+        await prisma.eventRegistration.update({
+          where: { id: reg.id },
+          data: { status: "INVITED" },
+        });
 
-      await sleep(150);
+        invitationResults.push(reg.leadEmail);
+        await sleep(150);
+      } catch (entryError: any) {
+        console.error(`[CRITICAL] Entry Dispatch Failed for: ${reg.leadEmail}. Error: ${entryError.message}`);
+        errors.push(`Failed for ${reg.leadEmail}: ${entryError.message}`);
+      }
     }
 
     transporter.close();
 
-    return NextResponse.json({ message: "Invitations sent successfully" }, { status: 200 });
+    if (invitationResults.length === 0 && event.registrations.length > 0) {
+      return NextResponse.json({
+        message: "All dispatches failed",
+        errors: errors
+      }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      message: "Invitations processed",
+      results: invitationResults,
+      errors: errors.length > 0 ? errors : undefined
+    }, { status: 200 });
 
   } catch (error) {
     console.error("Invite sending error:", error);
