@@ -18,16 +18,16 @@ export default function BulkInvitePage() {
         }
 
         const emailList = emails
-            .split(/[\n,;]/) // Added comma support
+            .split(/[\n,;]/)
             .map(row => {
                 const parts = row.split('|');
                 if (parts.length >= 2) {
                     return {
                         teamName: parts[0].trim(),
-                        email: parts[1].trim().toLowerCase()
+                        email: parts[1].replace(/['"]/g, "").trim().toLowerCase()
                     };
                 } else if (row.includes('@')) {
-                    const email = row.trim().toLowerCase();
+                    const email = row.replace(/['"]/g, "").trim().toLowerCase();
                     return {
                         teamName: email.split('@')[0],
                         email: email

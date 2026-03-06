@@ -54,7 +54,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
 
     for (const entry of emails) {
       try {
-        const cleanEmail = entry.email.trim().toLowerCase();
+        const cleanEmail = entry.email.replace(/['"]/g, "").trim().toLowerCase();
         const cleanTeamName = entry.teamName.trim() || cleanEmail.split('@')[0];
         if (!cleanEmail) continue;
 
