@@ -27,6 +27,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
+      pool: true,
+      maxConnections: 3,
+      maxMessages: 100,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
@@ -36,8 +39,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
     const liveEventUrl = `${baseUrl}/event/${eventId}/live`;
 
-    // Send emails and update status concurrently
-    const emailPromises = event.registrations.map(async (reg) => {
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    for (const reg of event.registrations) {
       const mailOptions = {
         from: `"DevHack Organizer" <${process.env.GMAIL_USER}>`,
         to: reg.leadEmail,
@@ -106,13 +110,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
 
       await transporter.sendMail(mailOptions);
 
-      return prisma.eventRegistration.update({
+      await prisma.eventRegistration.update({
         where: { id: reg.id },
         data: { status: "INVITED" },
       });
-    });
 
-    await Promise.all(emailPromises);
+      await sleep(150);
+    }
+
+    transporter.close();
 
     return NextResponse.json({ message: "Invitations sent successfully" }, { status: 200 });
 
