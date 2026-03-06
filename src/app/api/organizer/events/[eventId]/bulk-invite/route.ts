@@ -27,6 +27,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
+      pool: true,
+      maxConnections: 3,
+      maxMessages: 100,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
@@ -51,6 +54,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
 
     const invitationResults = [];
     const errors = [];
+
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     for (const entry of emails) {
       try {
@@ -169,11 +174,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
         });
 
         invitationResults.push(cleanEmail);
+
+        // Stagger to prevent Gmail lockouts
+        await sleep(150);
       } catch (entryError: any) {
         console.error(`[CRITICAL] Entry Dispatch Failed for: ${entry.email}. Error: ${entryError.message}`);
         errors.push(`Failed for ${entry.email}: ${entryError.message}`);
       }
     }
+
+    transporter.close();
 
     if (invitationResults.length === 0 && emails.length > 0) {
       return NextResponse.json({
