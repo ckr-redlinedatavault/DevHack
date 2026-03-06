@@ -55,7 +55,7 @@ export async function GET(
         const teams = await prisma.eventRegistration.findMany({
             where: {
                 eventId,
-                status: { in: ["INVITED", "APPROVED"] }
+                status: "INVITED"
             },
             select: {
                 id: true,
