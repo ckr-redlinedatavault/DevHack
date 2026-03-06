@@ -24,10 +24,10 @@ export default function BulkInvitePage() {
                 if (parts.length >= 2) {
                     return {
                         teamName: parts[0].trim(),
-                        email: parts[1].replace(/['"]/g, "").trim().toLowerCase()
+                        email: parts[1].replace(/[^\w@._+-]/g, "").trim().toLowerCase()
                     };
                 } else if (row.includes('@')) {
-                    const email = row.replace(/['"]/g, "").trim().toLowerCase();
+                    const email = row.replace(/[^\w@._+-]/g, "").trim().toLowerCase();
                     return {
                         teamName: email.split('@')[0],
                         email: email

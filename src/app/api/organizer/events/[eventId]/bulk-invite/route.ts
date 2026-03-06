@@ -58,8 +58,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     for (const entry of emails) {
+      let cleanEmail = "";
       try {
-        const cleanEmail = entry.email.replace(/['"]/g, "").trim().toLowerCase();
+        cleanEmail = entry.email.replace(/[^\w@._+-]/g, "").trim().toLowerCase();
         const cleanTeamName = entry.teamName.trim() || cleanEmail.split('@')[0];
         if (!cleanEmail) continue;
 
@@ -178,8 +179,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
         // Stagger to prevent Gmail lockouts
         await sleep(150);
       } catch (entryError: any) {
-        console.error(`[CRITICAL] Entry Dispatch Failed for: ${entry.email}. Error: ${entryError.message}`);
-        errors.push(`Failed for ${entry.email}: ${entryError.message}`);
+        console.error(`[CRITICAL] Entry Dispatch Failed for: ${cleanEmail}. Error: ${entryError.message}`);
+        errors.push(`Failed for ${cleanEmail}: ${entryError.message}`);
       }
     }
 
