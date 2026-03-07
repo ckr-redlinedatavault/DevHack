@@ -2,7 +2,7 @@
   <img src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png" width="280" alt="DevHack Logo">
 </p>
 
-<h1 align="center">DevHack v2.0</h1>
+<h1 align="center">DevHack v2.5</h1>
 
 <p align="center">
   <strong>The Ultimate Agentic Ecosystem for High-Performance Hackathon Teams and Organizers</strong>
@@ -20,52 +20,54 @@
 
 ## Overview
 
-**DevHack v2** is a revolutionary collaborative workspace and event management platform engineered for the modern hackathon era. It transforms the chaotic high-pressure environment of a hackathon into a streamlined, high-density innovation hub for both hackers and organizers. By integrating real-time intelligence with robust project and event management, DevHack v2 enables teams to transition from raw ideation to production-ready submissions with unparalleled speed while organizers monitor and direct the entire hackathon lifecycle perfectly.
+**DevHack v2.5** is a revolutionary collaborative workspace and event management platform engineered for the modern hackathon era. It transforms the chaotic high-pressure environment of a hackathon into a streamlined, high-density innovation hub. 
 
-## Innovations in v2
+By integrating real-time intelligence with robust project and event management, DevHack enables teams to transition from raw ideation to production-ready submissions with unparalleled speed while organizers monitor and direct the entire hackathon lifecycle with precision.
 
-- **Next-Gen Architecture**: Migrated to Next.js 16 and React 19 for cutting-edge performance and developer experience.
-- **Event Orchestration**: Fully integrated Organizer and Judge portals for granular event control, team scoring, and real-time timeline management.
-- **Aggressive Real-Time Data**: Live leaderboard synchronization, rapid polling, and active cache-busting to ensure global state matches the second points are awarded.
-- **Agentic Intelligence**: Integrated Antigravity AI capabilities for autonomous debugging, documentation generation, and problem analysis.
+## Innovations in v2.5
+
+- **Secure Lead Approval Flow**: A new robust "Request-to-Join" system where invited users must be vetted and approved by Team Leads before gaining workspace access.
+- **Ultra-Minimalist Agentic Chat**: A refined, pitch-black AI assistant UI designed for zero-distraction debugging and rapid technical support.
+- **Real-Time Synchronicity**: Powered by Socket.io, the platform now supports live status updates for events, instant leaderboard refreshes, and real-time team collaboration.
+- **Sanitized Communication Layer**: High-integrity email invitation system enforcing strict RFC 5321 standards to ensure 100% deliverability.
+- **Cross-Device Performance**: Fully responsive architecture ensuring that organizers can manage the event from a mobile device as easily as from a desktop.
 
 ## Technical Stack
 
 | Category | Technology |
 | :--- | :--- |
 | **Framework** | Next.js 16 (App Router) |
-| **Edge Logic** | Next.js Proxy (v16) |
+| **Edge Logic** | Node.js Runtime (v20+) |
+| **Real-Time** | Socket.io |
 | **Language** | TypeScript |
-| **Library** | React 19 (Stable) |
+| **AI Integration** | Google Gemini (Generative AI) |
 | **Styling** | Tailwind CSS 4 |
 | **Database** | PostgreSQL |
 | **ORM** | Prisma |
 
 ## Core Functionalities
 
-### Global Live Leaderboard
-A real-time public scoreboard tracking team performances globally. Features a synchronized rapid clock module seamlessly recalculating dynamic task completions, project submissions, and manual rewards awarded live by organizers. 
+### 🛡️ Team Lead Control Center
+Move beyond simple invite codes. Team Leads now have absolute authority over their roster, managing pending join requests with a single click and maintaining team integrity.
 
-### Organizer Control Room
-An absolute command center for organizers. Monitor live team registration feeds, oversee global timeline schedules, manage custom problem statements, assign specific jury pools, and run an exclusive "Ceremony Mode" embargo masking live results until stage reveal.
+### 📊 Organizer Command Room
+A powerful dashboard for event hosts to oversee global timelines, manage custom problem statements, assign jury pools, and run "Ceremony Mode" for high-stakes result reveals.
 
-### Rapid Reward Commits System
-Hackers natively "Push Update" their research notes and development commits directly to the Organizer dashboard. Without leaving the commit log, organizers can immediately read logs, review progress, and organically reward explicit point values back into the live leaderboard.
+### 🤖 Agentic AI Workspace
+Integrated Google Gemini capabilities allow for autonomous debugging, documentation fetching, and problem analysis, helping hackers stay in the "flow state" longer.
 
-### Secure Team Workspace Hub
-High-density sprint management with secure invite-only codes. Includes native task tracking, dynamic markdown team notes, centralized resource libraries, and integrated final project submission portals.
+### 📈 Live Leaderboard & Rewards
+A synchronized public scoreboard tracking performance. Organizers can reward points directly from commit logs, instantly reflecting on the global stage.
 
-### Jury Evaluation Portal
-A dedicated, isolated scoring environment for event Judges to log into and assess team project submissions across metrics such as Innovation, Implementation, Design, and Impact, instantly feeding averages back to the global scoreboard.
-
-### Polyglot Resource Library
-Exhaustive documentation and boilerplate hub for over 75+ technology stacks, helping teams ship faster without leaving the environment to search the web recursively.
+### ⚖️ Jury Evaluation Portal
+An isolated environment for judges to score projects across Innovation, Design, and Impact metrics, with automatic average calculations feeding into live results.
 
 ## Setup
 
 ### Prerequisites
 - Node.js 20.x or higher
-- PostgreSQL Database URL
+- PostgreSQL Database
+- Redis (for Socket.io scaling if needed)
 
 ### Setup Steps
 
@@ -87,20 +89,21 @@ DATABASE_URL="postgresql://..."
 NEXTAUTH_SECRET="..."
 NEXTAUTH_URL="http://localhost:3000"
 RESEND_API_KEY="..."
+GEMINI_API_KEY="..."
 ```
 
-4. **Initialize System**
+4. **Initialize Database**
 ```bash
 npx prisma db push
 npx prisma generate
 ```
 
-5. **Start Innovation**
+5. **Run the Development Server**
 ```bash
 npm run dev
 ```
 
 ---
 <p align="center">
-  Built with passion by the DevHack Team
+  Built with passion by <strong>Redlix Systems</strong> & <strong>Dhasha Media</strong>
 </p>
